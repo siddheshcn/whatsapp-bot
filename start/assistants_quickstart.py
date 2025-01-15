@@ -18,7 +18,7 @@ def upload_file(path):
     return file
 
 
-file = upload_file("../data/airbnb-faq.pdf")
+#file = upload_file("../data/airbnb-faq.pdf")
 
 
 # --------------------------------------------------------------
@@ -26,19 +26,19 @@ file = upload_file("../data/airbnb-faq.pdf")
 # --------------------------------------------------------------
 def create_assistant(file):
     """
-    You currently cannot set the temperature for Assistant via the API.
+    We currently cannot set the temperature for Assistant via the API.
     """
     assistant = client.beta.assistants.create(
-        name="WhatsApp AirBnb Assistant",
-        instructions="You're a helpful WhatsApp assistant that can assist guests that are staying in our Paris AirBnb. Use your knowledge base to best respond to customer queries. If you don't know the answer, say simply that you cannot help with question and advice to contact the host directly. Be friendly and funny.",
-        tools=[{"type": "retrieval"}],
-        model="gpt-4-1106-preview",
-        file_ids=[file.id],
+        name="WhatsApp AI Assistant",
+        instructions="You are a friendly AI assistant. You help people with their questions and answer them in a concise manner. Be friendly and funny wherever possible.",
+        #tools=[{"type": "retrieval"}],
+        model="gpt-4o-mini",
+        #file_ids=[file.id],
     )
     return assistant
 
 
-assistant = create_assistant(file)
+#assistant = create_assistant(file)
 
 
 # --------------------------------------------------------------
@@ -91,7 +91,7 @@ def generate_response(message_body, wa_id, name):
 # --------------------------------------------------------------
 def run_assistant(thread):
     # Retrieve the Assistant
-    assistant = client.beta.assistants.retrieve("asst_7Wx2nQwoPWSf710jrdWTDlfE")
+    assistant = client.beta.assistants.retrieve("asst_nGAu5egF1VXPkIrBcajbiyy7")
 
     # Run the assistant
     run = client.beta.threads.runs.create(

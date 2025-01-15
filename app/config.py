@@ -1,8 +1,13 @@
 import sys
 import os
-from dotenv import load_dotenv
+
 import logging
 
+print("Current working directory:", os.getcwd())
+print("Does .env exist?:", os.path.exists('.env'))
+
+from dotenv import load_dotenv
+load_dotenv()
 
 def load_configurations(app):
     load_dotenv()

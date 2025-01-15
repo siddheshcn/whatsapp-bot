@@ -89,6 +89,9 @@ data = get_text_message_input(
 
 response = send_message(data)
 
+
+'''
+
 # --------------------------------------------------------------
 # Send a custom text WhatsApp message asynchronously
 # --------------------------------------------------------------
@@ -137,3 +140,5 @@ data = get_text_message_input(
 loop = asyncio.get_event_loop()
 loop.run_until_complete(send_message(data))
 loop.close()
+
+'''

@@ -69,7 +69,7 @@ def verify():
             return challenge, 200
         else:
             # Responds with '403 Forbidden' if verify tokens do not match
-            logging.info("VERIFICATION_FAILED")
+            logging.info("VERIFICATION_FAILED", current_app.config["VERIFY_TOKEN"])
             return jsonify({"status": "error", "message": "Verification failed"}), 403
     else:
         # Responds with '400 Bad Request' if verify tokens do not match
