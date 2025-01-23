@@ -96,7 +96,7 @@ def generate_response(message_content, wa_id, name, message_type="text", media_u
     message = client.beta.threads.messages.create(
         thread_id=thread_id,
         role="user",
-        content=message_body,
+        content=content,
     )
 
     # Run the assistant and get the new message
