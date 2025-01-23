@@ -68,17 +68,11 @@ def run_assistant(thread, name):
     return new_message
 
 
-def generate_response(message_content, wa_id, name, message_type="text", media_url=None):
+def generate_response(message_body, wa_id, name):
+    #debug for openAI connection
     print("API Key present:", bool(os.getenv('OPENAI_API_KEY')))
+    # Check if there is already a thread_id for the wa_id
     thread_id = check_if_thread_exists(wa_id)
-    
-    # Prepare content based on message type
-    content = message_content
-    if message_type != "text":
-        if media_url:
-            content = f"[{message_type.capitalize()} URL: {media_url}]\n{message_content}"
-        else:
-            content = f"[{message_type.capitalize()}]\n{message_content}"
 
     # If a thread doesn't exist, create one and store it
     if thread_id is None:

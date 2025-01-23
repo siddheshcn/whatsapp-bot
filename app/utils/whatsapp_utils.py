@@ -82,32 +82,25 @@ def process_whatsapp_message(body):
     message = body["entry"][0]["changes"][0]["value"]["messages"][0]
     message_type = message.get("type", "")
     
-    # Extract message content and media URL based on type
+    # Extract message content based on type
     message_content = ""
-    media_url = None
-    
     if message_type == "text":
         message_content = message["text"]["body"]
     elif message_type == "image":
-        caption = message['image'].get('caption', 'No caption')
-        media_url = message['image'].get('id', None)
-        message_content = f"Image caption: {caption}"
+        message_content = f"[Image received: {message['image'].get('caption', 'No caption')}]"
+        if "mime_type" in message["image"]:
+            message_content += f" Type: {message['image']['mime_type']}"
     elif message_type == "document":
-        filename = message['document'].get('filename', 'No filename')
-        media_url = message['document'].get('id', None)
-        message_content = f"Document filename: {filename}"
+        message_content = f"[Document received: {message['document'].get('filename', 'No filename')}]"
     elif message_type == "video":
-        caption = message['video'].get('caption', 'No caption')
-        media_url = message['video'].get('id', None)
-        message_content = f"Video caption: {caption}"
+        message_content = f"[Video received: {message['video'].get('caption', 'No caption')}]"
     elif message_type == "audio":
-        media_url = message['audio'].get('id', None)
-        message_content = "Audio message"
+        message_content = "[Audio message received]"
     else:
-        message_content = "Unsupported message type received"
+        message_content = "[Unsupported message type received]"
 
     # OpenAI Integration
-    response = generate_response(message_content, wa_id, name, message_type, media_url)
+    response = generate_response(message_content, wa_id, name)
     response = process_text_for_whatsapp(response)
 
     data = get_text_message_input(current_app.config["RECIPIENT_WAID"], response)
