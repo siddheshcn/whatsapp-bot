@@ -134,7 +134,7 @@ def process_whatsapp_message(body):
         message_content = "Unsupported message type received"
 
     # OpenAI Integration
-    response = generate_response(message_content, wa_id, name, message_type, media_url)
+    response = generate_response(message_content, wa_id, name, message_type, media_content)
     response = process_text_for_whatsapp(response)
 
     data = get_text_message_input(current_app.config["RECIPIENT_WAID"], response)
