@@ -1,0 +1,79 @@
+* Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8000
+ * Running on http://172.31.196.50:8000
+2025-01-23 00:10:57,726 - werkzeug - INFO - Press CTRL+C to quit
+2025-01-23 00:10:59,368 - werkzeug - INFO - 172.31.196.50 - - [23/Jan/2025 00:10:59] "GET / HTTP/1.1" 404 -
+2025-01-23 00:12:28,997 - root - INFO - WEBHOOK_VERIFIED
+2025-01-23 00:12:28,998 - werkzeug - INFO - 172.31.196.50 - - [23/Jan/2025 00:12:28] "GET /webhook?hub.mode=subscribe&hub.challenge=1740965265&hub.verify_token=12345 HTTP/1.1" 200 -
+API Key present: True
+2025-01-23 00:13:17,326 - root - INFO - Retrieving existing thread for Sid's Old Number with wa_id 918082385670
+2025-01-23 00:13:17,911 - httpx - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_4wqBYv2XmMHv0TJJeroTlxmo "HTTP/1.1 200 OK"
+2025-01-23 00:13:18,249 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_4wqBYv2XmMHv0TJJeroTlxmo/messages "HTTP/1.1 200 OK"
+2025-01-23 00:13:18,600 - httpx - INFO - HTTP Request: GET https://api.openai.com/v1/assistants/asst_nGAu5egF1VXPkIrBcajbiyy7 "HTTP/1.1 200 OK"
+2025-01-23 00:13:19,418 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_4wqBYv2XmMHv0TJJeroTlxmo/runs "HTTP/1.1 200 OK"
+2025-01-23 00:13:20,524 - httpx - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_4wqBYv2XmMHv0TJJeroTlxmo/runs/run_JgbKTxuTbmCRZR2pxp1ErId5 "HTTP/1.1 200 OK"
+2025-01-23 00:13:21,362 - httpx - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_4wqBYv2XmMHv0TJJeroTlxmo/runs/run_JgbKTxuTbmCRZR2pxp1ErId5 "HTTP/1.1 200 OK"
+2025-01-23 00:13:21,673 - httpx - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_4wqBYv2XmMHv0TJJeroTlxmo/messages "HTTP/1.1 200 OK"
+2025-01-23 00:13:21,887 - root - INFO - Generated message: Your last message was: "What’s the difference between these two?" Let me know if you need further assistance!
+2025-01-23 00:13:23,711 - root - INFO - Status: 200
+2025-01-23 00:13:23,711 - root - INFO - Content-type: application/json; charset=UTF-8
+2025-01-23 00:13:23,711 - root - INFO - Body: {"messaging_product":"whatsapp","contacts":[{"input":"918082385670","wa_id":"918082385670"}],"messages":[{"id":"wamid.HBgMOTE4MDgyMzg1NjcwFQIAERgSMDAzRERDNjA3RjkwRkI0N0FBAA=="}]}
+2025-01-23 00:13:23,712 - werkzeug - INFO - 172.31.196.50 - - [23/Jan/2025 00:13:23] "POST /webhook HTTP/1.1" 200 -
+2025-01-23 00:13:25,731 - root - INFO - Received a WhatsApp status update.
+2025-01-23 00:13:25,731 - werkzeug - INFO - 172.31.196.50 - - [23/Jan/2025 00:13:25] "POST /webhook HTTP/1.1" 200 -
+2025-01-23 00:13:25,840 - root - INFO - Received a WhatsApp status update.
+2025-01-23 00:13:25,840 - werkzeug - INFO - 172.31.196.50 - - [23/Jan/2025 00:13:25] "POST /webhook HTTP/1.1" 200 -
+API Key present: True
+2025-01-23 00:14:21,601 - root - INFO - Retrieving existing thread for Sid's Old Number with wa_id 918082385670
+2025-01-23 00:14:22,067 - httpx - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_4wqBYv2XmMHv0TJJeroTlxmo "HTTP/1.1 200 OK"
+2025-01-23 00:14:22,450 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_4wqBYv2XmMHv0TJJeroTlxmo/messages "HTTP/1.1 200 OK"
+2025-01-23 00:14:22,963 - httpx - INFO - HTTP Request: GET https://api.openai.com/v1/assistants/asst_nGAu5egF1VXPkIrBcajbiyy7 "HTTP/1.1 200 OK"
+2025-01-23 00:14:23,994 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_4wqBYv2XmMHv0TJJeroTlxmo/runs "HTTP/1.1 200 OK"
+2025-01-23 00:14:24,917 - httpx - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_4wqBYv2XmMHv0TJJeroTlxmo/runs/run_qOjQI9up5KG8ImaVVqOlbTOj "HTTP/1.1 200 OK"
+2025-01-23 00:14:25,860 - httpx - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_4wqBYv2XmMHv0TJJeroTlxmo/runs/run_qOjQI9up5KG8ImaVVqOlbTOj "HTTP/1.1 200 OK"
+2025-01-23 00:14:26,230 - httpx - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_4wqBYv2XmMHv0TJJeroTlxmo/messages "HTTP/1.1 200 OK"
+2025-01-23 00:14:26,470 - root - INFO - Generated message: Please upload the image again so I can assist you in identifying or describing it.
+2025-01-23 00:14:27,047 - root - INFO - Status: 200
+2025-01-23 00:14:27,047 - root - INFO - Content-type: application/json; charset=UTF-8
+2025-01-23 00:14:27,047 - root - INFO - Body: {"messaging_product":"whatsapp","contacts":[{"input":"918082385670","wa_id":"918082385670"}],"messages":[{"id":"wamid.HBgMOTE4MDgyMzg1NjcwFQIAERgSRTVDRjczMTJCNTJGRTYxNzcxAA=="}]}
+2025-01-23 00:14:27,049 - werkzeug - INFO - 172.31.196.50 - - [23/Jan/2025 00:14:27] "POST /webhook HTTP/1.1" 200 -
+2025-01-23 00:14:28,460 - root - INFO - Received a WhatsApp status update.
+2025-01-23 00:14:28,460 - werkzeug - INFO - 172.31.196.50 - - [23/Jan/2025 00:14:28] "POST /webhook HTTP/1.1" 200 -
+2025-01-23 00:14:28,714 - root - INFO - Received a WhatsApp status update.
+2025-01-23 00:14:28,715 - werkzeug - INFO - 172.31.196.50 - - [23/Jan/2025 00:14:28] "POST /webhook HTTP/1.1" 200 -
+API Key present: True
+2025-01-23 00:14:50,824 - root - INFO - Retrieving existing thread for Sid's Old Number with wa_id 918082385670
+2025-01-23 00:14:51,228 - httpx - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_4wqBYv2XmMHv0TJJeroTlxmo "HTTP/1.1 200 OK"
+2025-01-23 00:14:51,672 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_4wqBYv2XmMHv0TJJeroTlxmo/messages "HTTP/1.1 200 OK"
+2025-01-23 00:14:52,033 - httpx - INFO - HTTP Request: GET https://api.openai.com/v1/assistants/asst_nGAu5egF1VXPkIrBcajbiyy7 "HTTP/1.1 200 OK"
+2025-01-23 00:14:53,284 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_4wqBYv2XmMHv0TJJeroTlxmo/runs "HTTP/1.1 200 OK"
+2025-01-23 00:14:54,173 - httpx - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_4wqBYv2XmMHv0TJJeroTlxmo/runs/run_u4NiuvT1A8THxV4SF6xmlzXz "HTTP/1.1 200 OK"
+2025-01-23 00:14:55,044 - httpx - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_4wqBYv2XmMHv0TJJeroTlxmo/runs/run_u4NiuvT1A8THxV4SF6xmlzXz "HTTP/1.1 200 OK"
+2025-01-23 00:14:55,392 - httpx - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_4wqBYv2XmMHv0TJJeroTlxmo/messages "HTTP/1.1 200 OK"
+2025-01-23 00:14:55,395 - root - INFO - Generated message: It seems there was an error in processing the image. Could you please try uploading it again?
+2025-01-23 00:14:56,024 - root - INFO - Status: 200
+2025-01-23 00:14:56,024 - root - INFO - Content-type: application/json; charset=UTF-8
+2025-01-23 00:14:56,024 - root - INFO - Body: {"messaging_product":"whatsapp","contacts":[{"input":"918082385670","wa_id":"918082385670"}],"messages":[{"id":"wamid.HBgMOTE4MDgyMzg1NjcwFQIAERgSREFBM0FFQUI2RjRGRjM4RTJBAA=="}]}
+2025-01-23 00:14:56,025 - werkzeug - INFO - 172.31.196.50 - - [23/Jan/2025 00:14:56] "POST /webhook HTTP/1.1" 200 -
+2025-01-23 00:14:57,224 - root - INFO - Received a WhatsApp status update.
+2025-01-23 00:14:57,225 - werkzeug - INFO - 172.31.196.50 - - [23/Jan/2025 00:14:57] "POST /webhook HTTP/1.1" 200 -
+2025-01-23 00:14:57,727 - root - INFO - Received a WhatsApp status update.
+2025-01-23 00:14:57,728 - werkzeug - INFO - 172.31.196.50 - - [23/Jan/2025 00:14:57] "POST /webhook HTTP/1.1" 200 -
+API Key present: True
+2025-01-23 00:15:13,122 - root - INFO - Retrieving existing thread for Sid's Old Number with wa_id 918082385670
+2025-01-23 00:15:13,497 - httpx - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_4wqBYv2XmMHv0TJJeroTlxmo "HTTP/1.1 200 OK"
+2025-01-23 00:15:13,868 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_4wqBYv2XmMHv0TJJeroTlxmo/messages "HTTP/1.1 200 OK"
+2025-01-23 00:15:14,271 - httpx - INFO - HTTP Request: GET https://api.openai.com/v1/assistants/asst_nGAu5egF1VXPkIrBcajbiyy7 "HTTP/1.1 200 OK"
+2025-01-23 00:15:15,054 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/threads/thread_4wqBYv2XmMHv0TJJeroTlxmo/runs "HTTP/1.1 200 OK"
+2025-01-23 00:15:15,983 - httpx - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_4wqBYv2XmMHv0TJJeroTlxmo/runs/run_Rp22xyJPSom6wX2xoor6U86h "HTTP/1.1 200 OK"
+2025-01-23 00:15:16,918 - httpx - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_4wqBYv2XmMHv0TJJeroTlxmo/runs/run_Rp22xyJPSom6wX2xoor6U86h "HTTP/1.1 200 OK"
+2025-01-23 00:15:17,262 - httpx - INFO - HTTP Request: GET https://api.openai.com/v1/threads/thread_4wqBYv2XmMHv0TJJeroTlxmo/messages "HTTP/1.1 200 OK"
+2025-01-23 00:15:17,504 - root - INFO - Generated message: I'm currently unable to process audio messages. If you can provide a text description or details about the audio, I'd be happy to help!
+2025-01-23 00:15:18,146 - root - INFO - Status: 200
+2025-01-23 00:15:18,146 - root - INFO - Content-type: application/json; charset=UTF-8
+2025-01-23 00:15:18,146 - root - INFO - Body: {"messaging_product":"whatsapp","contacts":[{"input":"918082385670","wa_id":"918082385670"}],"messages":[{"id":"wamid.HBgMOTE4MDgyMzg1NjcwFQIAERgSNjgyNzY5QTUyQkMwRkVGMUJDAA=="}]}
+2025-01-23 00:15:18,148 - werkzeug - INFO - 172.31.196.50 - - [23/Jan/2025 00:15:18] "POST /webhook HTTP/1.1" 200 -
+2025-01-23 00:15:19,339 - root - INFO - Received a WhatsApp status update.
+2025-01-23 00:15:19,339 - werkzeug - INFO - 172.31.196.50 - - [23/Jan/2025 00:15:19] "POST /webhook HTTP/1.1" 200 -
+2025-01-23 00:15:19,823 - root - INFO - Received a WhatsApp status update.
+2025-01-23 00:15:19,823 - werkzeug - INFO - 172.31.196.50 - - [23/Jan/2025 00:15:19] "POST /webhook HTTP/1.1" 200 -
