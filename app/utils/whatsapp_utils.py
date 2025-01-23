@@ -24,6 +24,28 @@ def get_text_message_input(recipient, text):
         }
     )
 
+def download_media(media_id):
+    url = f"https://graph.facebook.com/v17.0/{media_id}"
+    headers = {
+        'Authorization': f'Bearer {current_app.config["ACCESS_TOKEN"]}'
+    }
+    
+    # Get media URL
+    response = requests.get(url, headers=headers)
+    if response.status_code != 200:
+        logging.error(f"Failed to get media URL: {response.text}")
+        return None
+        
+    media_url = response.json().get('url')
+    
+    # Download media
+    response = requests.get(media_url, headers=headers)
+    if response.status_code != 200:
+        logging.error(f"Failed to download media: {response.text}")
+        return None
+        
+    return response.content
+
 
 # def generate_response(response):
 #     # Return text in uppercase
@@ -88,20 +110,25 @@ def process_whatsapp_message(body):
     
     if message_type == "text":
         message_content = message["text"]["body"]
+        media_content = None
     elif message_type == "image":
         caption = message['image'].get('caption', 'No caption')
-        media_url = message['image'].get('id', None)
-        message_content = f"Image caption: {caption}"
+        media_id = message['image'].get('id')
+        media_content = download_media(media_id) if media_id else None
+        message_content = caption
     elif message_type == "document":
         filename = message['document'].get('filename', 'No filename')
-        media_url = message['document'].get('id', None)
-        message_content = f"Document filename: {filename}"
+        media_id = message['document'].get('id')
+        media_content = download_media(media_id) if media_id else None
+        message_content = filename
     elif message_type == "video":
         caption = message['video'].get('caption', 'No caption')
-        media_url = message['video'].get('id', None)
-        message_content = f"Video caption: {caption}"
+        media_id = message['video'].get('id')
+        media_content = download_media(media_id) if media_id else None
+        message_content = caption
     elif message_type == "audio":
-        media_url = message['audio'].get('id', None)
+        media_id = message['audio'].get('id')
+        media_content = download_media(media_id) if media_id else None
         message_content = "Audio message"
     else:
         message_content = "Unsupported message type received"

@@ -68,17 +68,28 @@ def run_assistant(thread, name):
     return new_message
 
 
-def generate_response(message_content, wa_id, name, message_type="text", media_url=None):
+def generate_response(message_content, wa_id, name, message_type="text", media_content=None):
     print("API Key present:", bool(os.getenv('OPENAI_API_KEY')))
     thread_id = check_if_thread_exists(wa_id)
     
-    # Prepare content based on message type
+    # Upload media file if present
+    file_id = None
+    if media_content and message_type in ["image", "document", "video", "audio"]:
+        try:
+            temp_filename = f"temp_media_{wa_id}"
+            with open(temp_filename, "wb") as f:
+                f.write(media_content)
+            
+            with open(temp_filename, "rb") as f:
+                response = client.files.create(file=f, purpose="assistants")
+                file_id = response.id
+                
+            os.remove(temp_filename)
+        except Exception as e:
+            logging.error(f"Failed to upload media to OpenAI: {e}")
+    
+    # Prepare content
     content = message_content
-    if message_type != "text":
-        if media_url:
-            content = f"[{message_type.capitalize()} URL: {media_url}]\n{message_content}"
-        else:
-            content = f"[{message_type.capitalize()}]\n{message_content}"
 
     # If a thread doesn't exist, create one and store it
     if thread_id is None:
