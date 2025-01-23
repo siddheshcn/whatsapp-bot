@@ -80,13 +80,27 @@ def process_whatsapp_message(body):
     name = body["entry"][0]["changes"][0]["value"]["contacts"][0]["profile"]["name"]
 
     message = body["entry"][0]["changes"][0]["value"]["messages"][0]
-    message_body = message["text"]["body"]
-
-    # TODO: implement custom function here
-    #response = generate_response(message_body)
+    message_type = message.get("type", "")
+    
+    # Extract message content based on type
+    message_content = ""
+    if message_type == "text":
+        message_content = message["text"]["body"]
+    elif message_type == "image":
+        message_content = f"[Image received: {message['image'].get('caption', 'No caption')}]"
+        if "mime_type" in message["image"]:
+            message_content += f" Type: {message['image']['mime_type']}"
+    elif message_type == "document":
+        message_content = f"[Document received: {message['document'].get('filename', 'No filename')}]"
+    elif message_type == "video":
+        message_content = f"[Video received: {message['video'].get('caption', 'No caption')}]"
+    elif message_type == "audio":
+        message_content = "[Audio message received]"
+    else:
+        message_content = "[Unsupported message type received]"
 
     # OpenAI Integration
-    response = generate_response(message_body, wa_id, name)
+    response = generate_response(message_content, wa_id, name)
     response = process_text_for_whatsapp(response)
 
     data = get_text_message_input(current_app.config["RECIPIENT_WAID"], response)
@@ -96,12 +110,18 @@ def process_whatsapp_message(body):
 def is_valid_whatsapp_message(body):
     """
     Check if the incoming webhook event has a valid WhatsApp message structure.
+    Supports text, image, document, video, and audio messages.
     """
-    return (
-        body.get("object")
-        and body.get("entry")
-        and body["entry"][0].get("changes")
-        and body["entry"][0]["changes"][0].get("value")
-        and body["entry"][0]["changes"][0]["value"].get("messages")
-        and body["entry"][0]["changes"][0]["value"]["messages"][0]
-    )
+    try:
+        return (
+            body.get("object")
+            and body.get("entry")
+            and body["entry"][0].get("changes")
+            and body["entry"][0]["changes"][0].get("value")
+            and body["entry"][0]["changes"][0]["value"].get("messages")
+            and body["entry"][0]["changes"][0]["value"]["messages"][0]
+            and body["entry"][0]["changes"][0]["value"]["messages"][0].get("type")
+            in ["text", "image", "document", "video", "audio"]
+        )
+    except (KeyError, IndexError):
+        return False
