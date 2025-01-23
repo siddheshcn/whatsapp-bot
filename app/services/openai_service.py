@@ -74,19 +74,31 @@ def generate_response(message_content, wa_id, name, message_type="text", media_c
     
     # Upload media file if present
     file_id = None
-    if media_content and message_type in ["image", "document", "video", "audio"]:
+    supported_image_types = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
+    
+    if media_content and message_type == "image":
         try:
-            temp_filename = f"temp_media_{wa_id}"
-            with open(temp_filename, "wb") as f:
-                f.write(media_content)
+            import magic
+            mime_type = magic.from_buffer(media_content, mime=True)
             
-            with open(temp_filename, "rb") as f:
-                response = client.files.create(file=f, purpose="assistants")
-                file_id = response.id
+            if mime_type in supported_image_types:
+                temp_filename = f"temp_media_{wa_id}"
+                with open(temp_filename, "wb") as f:
+                    f.write(media_content)
                 
-            os.remove(temp_filename)
+                with open(temp_filename, "rb") as f:
+                    response = client.files.create(file=f, purpose="assistants")
+                    file_id = response.id
+                    content = f"[Image uploaded successfully. File ID: {file_id}]\n{content}"
+                
+                os.remove(temp_filename)
+            else:
+                logging.error(f"Unsupported image type: {mime_type}")
+                content = f"[Unsupported image format. Only JPEG, PNG, GIF, and WebP are supported]\n{content}"
         except Exception as e:
             logging.error(f"Failed to upload media to OpenAI: {e}")
+    elif media_content and message_type in ["audio", "video"]:
+        content = f"[{message_type.capitalize()} messages are not supported yet. Please send your message as text.]\n{content}"
     
     # Prepare content
     content = message_content
