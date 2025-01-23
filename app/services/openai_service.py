@@ -76,6 +76,7 @@ def generate_response(message_content, wa_id, name, message_type="text", media_c
     file_id = None
     supported_image_types = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
     
+    content = message_content
     if media_content and message_type == "image":
         try:
             import magic
@@ -97,6 +98,7 @@ def generate_response(message_content, wa_id, name, message_type="text", media_c
                 content = f"[Unsupported image format. Only JPEG, PNG, GIF, and WebP are supported]\n{content}"
         except Exception as e:
             logging.error(f"Failed to upload media to OpenAI: {e}")
+            content = f"[Failed to process image: {str(e)}]\n{content}"
     elif media_content and message_type in ["audio", "video"]:
         content = f"[{message_type.capitalize()} messages are not supported yet. Please send your message as text.]\n{content}"
     
