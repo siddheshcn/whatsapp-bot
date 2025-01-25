@@ -70,7 +70,7 @@ def run_assistant(thread, name):
 
 from .langchain_service import generate_langchain_response
 
-def generate_response(message_content, wa_id, name, message_type="text", media_content=None, use_langchain=False):
+def generate_response(message_content, wa_id, name, message_type="text", media_content=None, use_langchain=True):
     print("API Key present:", bool(os.getenv('OPENAI_API_KEY')))
     
     if use_langchain:
