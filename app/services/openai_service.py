@@ -68,8 +68,14 @@ def run_assistant(thread, name):
     return new_message
 
 
-def generate_response(message_content, wa_id, name, message_type="text", media_content=None):
+from .langchain_service import generate_langchain_response
+
+def generate_response(message_content, wa_id, name, message_type="text", media_content=None, use_langchain=False):
     print("API Key present:", bool(os.getenv('OPENAI_API_KEY')))
+    
+    if use_langchain:
+        return generate_langchain_response(message_content)
+        
     thread_id = check_if_thread_exists(wa_id)
     
     # Upload media file if present
