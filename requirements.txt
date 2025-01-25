@@ -6,4 +6,7 @@ requests
 python-magic
 langchain
 langchain-community
+langchain-openai
 youtube-transcript-api
+python-dotenv>=0.19.0
+openai>=1.0.0
