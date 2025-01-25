@@ -1,5 +1,5 @@
 
-from langchain.llms import OpenAI
+from langchain_OpenAI import ChatOpenAI
 from langchain.chains import LLMChain
 from langchain.prompts import ChatPromptTemplate
 import os
@@ -13,7 +13,7 @@ load_dotenv()
 def generate_langchain_response(prompt_text, template=None):
 
     # Initialize the LLM
-    llm = OpenAI(model="gpt-4o-mini", api_key=os.getenv("OPENAI_API_KEY"))
+    llm = ChatOpenAI(model="gpt-4o-mini", api_key=os.getenv("OPENAI_API_KEY"))
 
     #Chains
     intent_detection_chain = (
