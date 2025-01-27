@@ -66,7 +66,7 @@ def generate_langchain_response(prompt_text, template=None):
             loader = YoutubeLoader.from_youtube_url(yt_url, add_video_info=False)
             result = loader.load()
             if not result:
-                log_progress("No transcript found for the given YouTube URL.")
+                log_progress("No transcript found for the given YouTube URL. ", yt_url)
                 return "No transcript found for this video."
             return result[0].page_content
         except ImportError as e:
