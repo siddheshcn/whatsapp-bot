@@ -69,9 +69,12 @@ def generate_langchain_response(prompt_text, template=None):
                 log_progress("No transcript found for the given YouTube URL.")
                 return "No transcript found for this video."
             return result[0].page_content
+        except ImportError as e:
+            log_progress(f"YouTube transcript dependency error: {e}")
+            return "Error: Missing required dependencies for YouTube transcript loading."
         except Exception as e:
-            log_progress(f"Error loading YouTube transcript: {e}")
-            return f"Failed to load transcript: {str(e)}"
+            log_progress(f"Error loading YouTube transcript: {e}. URL: {yt_url}")
+            return f"Failed to load transcript. Please ensure the video exists and has captions enabled."
 
     
     
