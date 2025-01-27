@@ -40,7 +40,7 @@ def generate_langchain_response(prompt_text, template=None):
             1. Return ONLY a JSON object in this EXACT format:
             {{"youtube_url": "URL", "condition": "CONDITION"}}
             2. For YouTube URL: Extract any YouTube URL from the message. If none exists, use null
-            3. For condition: Extract any user request or query accompanied with this video. If none exists, use "summarize"
+            3. For condition: Extract any user request or query accompanied with this video. Anything apart from the url should be treated as the request or query. If none exists, use "summarize"
             4. Do not add any explanations or text before or after the JSON""")
         ])
         | llm
@@ -123,7 +123,7 @@ def generate_langchain_response(prompt_text, template=None):
             elif "generalquery" in intent:
                 general_response = llm.invoke(user_message)
                 response_content = general_response.content if hasattr(general_response, 'content') else str(general_response)
-                log_progress("General query response: " + response_content)
+                log_progress("General query response generated")
                 return response_content
 
             else:
