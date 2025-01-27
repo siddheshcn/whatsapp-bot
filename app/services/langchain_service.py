@@ -19,7 +19,7 @@ def generate_langchain_response(prompt_text, template=None):
     intent_detection_chain = (
         ChatPromptTemplate.from_messages([
             ("system", "You are a helpful assistant that identifies the user's intent."),
-            ("human", "Here's the user's message: {user_message}. Identify the intent to either 'youtubesummary' or 'generalquery'. Your response should not contain anything other than these two options.")
+            ("human", "Here's the user's message: {user_message}. If the message consists of a youtube URL, it means that the user wants to learn about the content of that video. Identify and highlight the intent to either 'youtubelink' if it contains a youtube URL or 'generalquery' if it does not contain a youtube URL. Your response should not contain anything other than these two options.")
         ])
         | llm
         | StrOutputParser()
@@ -68,7 +68,7 @@ def generate_langchain_response(prompt_text, template=None):
             intent_result = intent_detection_chain.invoke({"user_message": user_message})
             intent = intent_result.strip().lower()
 
-            if "youtubesummary" in intent:
+            if "youtubelink" in intent:
                 # Step 2: Parse YouTube-related input
                 try:
                     parsing_result = message_parsing_chain.invoke({"user_message": user_message})
