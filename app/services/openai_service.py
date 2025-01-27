@@ -5,10 +5,12 @@ import os
 import time
 import logging
 
-load_dotenv()
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-OPENAI_ASSISTANT_ID = os.getenv("OPENAI_ASSISTANT_ID")
-client = OpenAI(api_key=OPENAI_API_KEY)
+from flask import current_app
+
+def get_openai_client():
+    return OpenAI(api_key=current_app.config["OPENAI_API_KEY"])
+
+client = get_openai_client()
 
 
 def upload_file(path):
