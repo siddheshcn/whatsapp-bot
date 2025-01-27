@@ -7,12 +7,16 @@ from dotenv import load_dotenv
 from langchain.schema.output_parser import StrOutputParser
 from langchain_community.document_loaders import YoutubeLoader
 import json
-
+from app.utils.progress_tracker import log_progress #custom logging
 load_dotenv()
 
 def generate_langchain_response(prompt_text, template=None):
 
     # Initialize the LLM
+    
+
+    # Then use it anywhere in your code:
+    log_progress("Initiating LLM...")
     llm = ChatOpenAI(model="gpt-4o-mini", api_key=os.getenv("OPENAI_API_KEY"))
 
     #Chains
@@ -72,6 +76,7 @@ def generate_langchain_response(prompt_text, template=None):
             # Step 1: Detect intent
             intent_result = intent_detection_chain.invoke({"user_message": user_message})
             intent = intent_result.strip().lower()
+            log_progress(f"Intent detected: {intent}")
 
             if "youtubelink" in intent:
                 # Step 2: Parse YouTube-related input

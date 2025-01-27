@@ -15,12 +15,12 @@ def get_openai_client():
         client = OpenAI(api_key=current_app.config["OPENAI_API_KEY"])
     return client
 
-def upload_file(path):
-    # Get client within context
-    client = get_openai_client()
-    file = client.files.create(
-        file=open("../../data/airbnb-faq.pdf", "rb"), purpose="assistants"
-    )
+# def upload_file(path):
+#     # Get client within context
+#     client = get_openai_client()
+#     file = client.files.create(
+#         file=open("../../data/airbnb-faq.pdf", "rb"), purpose="assistants"
+#     )
 
 def check_if_thread_exists(wa_id):
     with shelve.open("threads_db") as threads_shelf:
