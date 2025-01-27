@@ -95,14 +95,22 @@ def view_progress():
     <html>
     <head>
         <title>WhatsApp Bot Progress</title>
-        <meta http-equiv="refresh" content="5">
         <style>
             body { font-family: monospace; padding: 20px; background: #f5f5f5; }
             .log { margin: 5px 0; padding: 5px; background: white; border-left: 3px solid #333; }
+            .refresh-btn { 
+                padding: 10px 20px; 
+                background: #4CAF50; 
+                color: white; 
+                border: none; 
+                cursor: pointer; 
+                margin-bottom: 20px;
+            }
         </style>
     </head>
     <body>
         <h2>WhatsApp Bot Progress</h2>
+        <button class="refresh-btn" onclick="window.location.reload()">Refresh Logs</button>
         {% for log in logs %}
             <div class="log">{{ log }}</div>
         {% endfor %}
