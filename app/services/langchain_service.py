@@ -55,9 +55,14 @@ def generate_langchain_response(prompt_text, template=None):
         """
         Loads the transcript for a YouTube video given its URL.
         """
-        loader = YoutubeLoader.from_youtube_url(yt_url, add_video_info=False)
-        result = loader.load()
-        return result[0].page_content
+        try:
+            loader = YoutubeLoader.from_youtube_url(yt_url, add_video_info=False)
+            result = loader.load()
+            if not result:
+                return "No transcript found for this video."
+            return result[0].page_content
+        except Exception as e:
+            return f"Failed to load transcript: {str(e)}"
 
     def process_user_message(user_message: str) -> str:
         """
