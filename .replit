@@ -22,7 +22,8 @@ runButton = "Run"
 [[workflows.workflow]]
 name = "Run"
 author = 36216320
+mode = "sequential"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "gunicorn -b 0.0.0.0:8080 'app:create_app()'"
+args = "gunicorn run:app --log-level warning --bind 0.0.0.0:8080"
