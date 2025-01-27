@@ -122,8 +122,9 @@ def generate_langchain_response(prompt_text, template=None):
 
             elif "generalquery" in intent:
                 general_response = llm.invoke(user_message)
-                log_progress("General query response: " + general_response)
-                return general_response.content
+                response_content = general_response.content if hasattr(general_response, 'content') else str(general_response)
+                log_progress("General query response: " + response_content)
+                return response_content
 
             else:
                 log_progress("No intent detected. Generating error response.")
