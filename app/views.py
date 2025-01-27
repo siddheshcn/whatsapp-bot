@@ -1,9 +1,10 @@
 import logging
 import json
 
-from flask import Blueprint, request, jsonify, current_app
+from flask import Blueprint, request, jsonify, current_app, render_template_string
 
 from .decorators.security import signature_required
+from .utils.progress_tracker import ProgressTracker
 from .utils.whatsapp_utils import (
     process_whatsapp_message,
     is_valid_whatsapp_message,
@@ -85,5 +86,29 @@ def webhook_get():
 @signature_required
 def webhook_post():
     return handle_message()
+
+@webhook_blueprint.route("/progress")
+def view_progress():
+    logs = ProgressTracker.get_instance().get_logs()
+    template = '''
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>WhatsApp Bot Progress</title>
+        <meta http-equiv="refresh" content="5">
+        <style>
+            body { font-family: monospace; padding: 20px; background: #f5f5f5; }
+            .log { margin: 5px 0; padding: 5px; background: white; border-left: 3px solid #333; }
+        </style>
+    </head>
+    <body>
+        <h2>WhatsApp Bot Progress</h2>
+        {% for log in logs %}
+            <div class="log">{{ log }}</div>
+        {% endfor %}
+    </body>
+    </html>
+    '''
+    return render_template_string(template, logs=logs)
 
 
