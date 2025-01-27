@@ -13,13 +13,11 @@ load_dotenv()
 def generate_langchain_response(prompt_text, template=None):
 
     # Initialize the LLM
-    
-
-    # Then use it anywhere in your code:
     log_progress("Initiating LLM...")
     llm = ChatOpenAI(model="gpt-4o-mini", api_key=os.getenv("OPENAI_API_KEY"))
 
     #Chains
+    #detect if the inent is 'youtubelink' or 'generalquery'
     intent_detection_chain = (
         ChatPromptTemplate.from_messages([
             ("system", "You are a helpful assistant that identifies the user's intent."),
@@ -29,6 +27,9 @@ def generate_langchain_response(prompt_text, template=None):
         | StrOutputParser()
     )
 
+
+    
+    #if the intent is 'youtubelink', then load the youtube video and extract the text
     message_parsing_chain = (
         ChatPromptTemplate.from_messages([
             ("system", """You are a JSON formatting assistant. You MUST return a valid JSON object and NOTHING else.
@@ -45,6 +46,7 @@ def generate_langchain_response(prompt_text, template=None):
         | llm
         | StrOutputParser()
     )
+    
 
     yt_summarization_chain = (
         ChatPromptTemplate.from_messages([
@@ -54,7 +56,8 @@ def generate_langchain_response(prompt_text, template=None):
         | llm
         | StrOutputParser()
     )
-
+    
+    #function to load the youtube transcripts
     def load_yt_transcript(yt_url: str) -> str:
         """
         Loads the transcript for a YouTube video given its URL.
@@ -63,15 +66,21 @@ def generate_langchain_response(prompt_text, template=None):
             loader = YoutubeLoader.from_youtube_url(yt_url, add_video_info=False)
             result = loader.load()
             if not result:
+                log_progress("No transcript found for the given YouTube URL.")
                 return "No transcript found for this video."
             return result[0].page_content
         except Exception as e:
+            log_progress(f"Error loading YouTube transcript: {e}")
             return f"Failed to load transcript: {str(e)}"
 
+    
+    
+    #function to process user message (called on the original user prompt)
     def process_user_message(user_message: str) -> str:
         """
         Processes a user's message using LCEL chains and intent detection.
         """
+        log_progress(f"Processing user message: {user_message}")
         try:
             # Step 1: Detect intent
             intent_result = intent_detection_chain.invoke({"user_message": user_message})
@@ -79,6 +88,7 @@ def generate_langchain_response(prompt_text, template=None):
             log_progress(f"Intent detected: {intent}")
 
             if "youtubelink" in intent:
+                log_progress("Extracting YouTube URL and conditions (if any)")
                 # Step 2: Parse YouTube-related input
                 try:
                     parsing_result = message_parsing_chain.invoke({"user_message": user_message})
@@ -91,11 +101,14 @@ def generate_langchain_response(prompt_text, template=None):
 
                     yt_url = parsing_result.get("youtube_url")
                     if not yt_url:
+                        log_progress("No YouTube URL found in the message.")
                         return "No YouTube URL found in the message."
 
                     yt_conditions = parsing_result.get("condition", "summarize")
 
                     # Step 3: Load YouTube transcript and summarize
+                    log_progress(f"YouTube link: {yt_url}, User request: {yt_conditions}")
+                    log_progress("Loading YouTube transcript and summarizing")
                     yt_transcript = load_yt_transcript(yt_url)
                     summary_result = yt_summarization_chain.invoke({
                         "yt_conditions": yt_conditions,
@@ -109,16 +122,20 @@ def generate_langchain_response(prompt_text, template=None):
 
             elif "generalquery" in intent:
                 general_response = llm.invoke(user_message)
+                log_progress("General query response: " + general_response)
                 return general_response.content
 
             else:
+                log_progress("No intent detected. Generating error response.")
                 return "I'm sorry, I couldn't understand your request. Could you clarify?"
 
         except Exception as e:
+            log_progress("Error processing user message: " + str(e))
             return f"An error occurred: {str(e)}"
 
 
     
     response = process_user_message(prompt_text)
     
+    log_progress("Response generated: " + response)
     return response.strip()
