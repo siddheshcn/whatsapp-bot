@@ -1,75 +1,91 @@
-# Project Progress: WhatsApp Bot Journey
+
+# WhatsApp AI Assistant Documentation
 
 ## Overview
-This document highlights the journey and progress of building and deploying a WhatsApp Bot. The initial guide served as a starting point, and through systematic iterations, the project has evolved into a functional and intelligent chatbot.
+A WhatsApp bot powered by LangChain and OpenAI that processes messages, handles multimedia content, and provides AI-assisted responses. The bot can understand YouTube links, process general queries, and maintain conversation context.
 
----
+## Core Components
 
-## Key Achievements
+### 1. Main Services
+- **LangChain Service** (`app/services/langchain_service.py`): 
+  - Handles AI response generation using LangChain
+  - Processes YouTube links and extracts transcripts
+  - Manages conversation chains and intent detection
 
-1. **End-to-End Integration**: Successfully connected the bot to the WhatsApp Cloud API and configured webhooks to send and receive messages.
-2. **API Mastery**: Generated long-term access tokens, enabling seamless communication and scalability.
-3. **Webhook Security**: Implemented robust verification and payload validation, ensuring secure data exchange.
-4. **Dynamic Response System**: Enhanced the bot's capabilities by integrating OpenAI's API to generate context-aware responses.
-5. **Streamlined Deployment**: Leveraged tools like Flask, ngrok, and Meta App Dashboard to ensure smooth and efficient deployment.
+- **OpenAI Service** (`app/services/openai_service.py`):
+  - Manages OpenAI API interactions
+  - Handles thread management for conversations
+  - Processes multimedia content
 
----
+### 2. Webhook Handler
+- **Views** (`app/views.py`):
+  - Manages incoming WhatsApp webhook events
+  - Handles message verification and security
+  - Routes messages to appropriate processors
 
-## Prerequisites
+### 3. Utilities
+- **WhatsApp Utils** (`app/utils/whatsapp_utils.py`):
+  - Processes incoming messages
+  - Handles media downloads
+  - Formats responses for WhatsApp
 
-1. A Meta developer account
-2. A business app
-3. Python, Flask, LangChain, GROK, OpenAI APIs.
+- **Progress Tracker** (`app/utils/progress_tracker.py`):
+  - Monitors application progress
+  - Logs important events
+  - Provides debugging information
 
----
+### 4. Security
+- **Security Decorators** (`app/decorators/security.py`):
+  - Validates webhook signatures
+  - Ensures secure communication
+  - Protects endpoints
 
-## Milestones Reached
+## Features
+1. Message Processing
+   - Text message handling
+   - Image processing
+   - Document handling
+   - Audio/Video message support
 
-### Milestone 1: Initial Setup
-- Configured WhatsApp Business App with test numbers.
-- Verified the connection by sending a "Hello World" message.
+2. AI Capabilities
+   - Context-aware conversations
+   - YouTube content analysis
+   - Natural language understanding
+   - Multi-purpose response generation
 
-### Milestone 2: Persistent Access
-- Generated and implemented long-term access tokens to bypass the 24-hour token limitation.
-- Verified the app dashboard configurations.
+3. System Features
+   - Progress tracking
+   - Error handling
+   - Secure webhook verification
+   - Environment configuration
 
-### Milestone 3: Webhook Integration
-- Successfully configured and tested webhooks using ngrok for secure tunneling.
-- Implemented verification requests and payload validation to meet security standards.
+## Setup Requirements
+1. Meta Developer Account
+2. WhatsApp Business API access
+3. OpenAI API key
+4. Required Python packages (see requirements.txt)
 
-### Milestone 4: AI Integration
-- Integrated OpenAI's Assistant API for advanced response generation.
-- Customized the `generate_response()` function to tailor replies based on user interactions.
+## Configuration
+The application uses environment variables for configuration:
+- ACCESS_TOKEN
+- APP_ID
+- APP_SECRET
+- VERIFY_TOKEN
+- OPENAI_API_KEY
+- OPENAI_ASSISTANT_ID
 
-### Milestone 5: Production Readiness
-- Migrated to a dedicated phone number for production use.
-- Conducted extensive testing to ensure reliability and robustness.
+## Running the Application
+1. Set up environment variables
+2. Install dependencies: `pip install -r requirements.txt`
+3. Run the application: `python run.py`
 
----
+## Monitoring
+- Access `/progress` endpoint for real-time progress monitoring
+- Check console logs for detailed debugging information
+- Monitor webhook events through Meta's developer dashboard
 
-## Challenges and Learnings
-
-1. **Webhook Configuration**: Required multiple iterations to ensure smooth validation and subscription to message events.
-2. **Token Management**: Overcame issues with token expiration by exploring system user configurations and permissions.
-3. **Response Optimization**: Fine-tuned AI responses to balance speed and accuracy.
-
----
-
-## Next Steps
-
-1. **Deployment on Replit**: Deploy the bot on Replit to enable seamless hosting and management.
-2. **LangChain Orchestration**: Integrate LangChain for multi-purpose AI assistant capabilities such as:
-   - Summarizing YouTube videos from links.
-   - Processing audio and images shared by users.
-3. **Agent Creation**: Develop specialized agents for tasks like:
-   - Creating reminders.
-   - Automating expense updates to spreadsheets.
-   - Querying spreadsheets for specific information, e.g., summaries of last week’s expenses or total grocery expenses for the month.
-4. **Enhance Features**: Add functionalities like message scheduling, multilingual support, and advanced analytics.
-5. **User Feedback**: Gather user feedback to improve the bot’s usability and effectiveness.
-
----
-
-## Conclusion
-The project has transitioned from a simple guide-based setup to a fully functional and intelligent WhatsApp Bot. This journey reflects continuous learning, problem-solving, and a commitment to delivering a high-quality product.
-
+## Future Enhancements
+1. Enhanced multimedia processing
+2. Additional AI model integration
+3. Advanced conversation management
+4. Analytics and reporting features
