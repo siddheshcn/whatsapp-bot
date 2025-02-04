@@ -124,24 +124,22 @@ else:
 #RAG
 #---------------------------------------------------------------------------------------------------------------------------------
 
-#Simplest form: submit the whole document as context
-# Read the transcript file
-with open(local_kb_path, 'r') as file:
-    relevant_knowledge = file.read()
-
-#Level 1
 #Submit relevant chunks
-
 #Load the embedding model
-embeddings = OpenAIEmbeddings(
-        model="text-embedding-3-small"
-    )
+def load_embedding_model():
+    # Load the embedding model
+    embeddings = OpenAIEmbeddings(
+            model="text-embedding-3-small"
+        )
+    return embeddings
 
 #Load existing vector store with the embedding function
 db = Chroma(persist_directory=persistent_directory, embedding_function=embeddings)
 
 #Retrieve relevant documents based on the query
 def getMyChunks(query):
+    embeddings = load_embedding_model()
+    db = Chroma(persist_directory=persistent_directory, embedding_function=embeddings)
     retriever = db.as_retriever(
         search_type="similarity_score_threshold",
         search_kwargs={"k": 5, "score_threshold": 0.1},
@@ -161,12 +159,6 @@ def getMyChunks(query):
 #---------------------------------------------------------------------------------------------------------------------------------
 #LANGCHAIN
 #---------------------------------------------------------------------------------------------------------------------------------
-
-
-
-#Runnable Lambda test
-count_words = RunnableLambda(lambda x: f"Word count: {len(x.split())}\n{x}") #/n{x} is to forward that to the next in chain
-
 ####Extra Ordinary Doctor, book AI
 eodr_message = [
     ("system", """
@@ -197,42 +189,10 @@ chain = eodr_template | model | StrOutputParser()
 
 #Invoke the chain with conditions
 
-
-
 def gen_response(myproblem):
-    #print("\n ________________________________________________________\n")
     relevant_knowledge = getMyChunks(myproblem)
     result = chain.invoke({
         "user_problem":myproblem,
         "knowledge": relevant_knowledge
         })
-    #print(result)
     return result
-
-valid_concern = """
-                A lot of my patients are using chatgpt to diagnose their conditions.
-                Some of their diagnoses are accurate. But they are often misdiagnose and start wrong medications.
-                When I disagree with their diagnosis, they get offended. Some of them have even left after just that conversation.
-                What do you suggest?
-                """
-nurseprob = "The Nurses prefer working with other surgoens. I've noticed them getting irritated by my instructions. What do I do?"
-wrong_doc = "I am a knee surgoen who specializes in knee replacement. What if my patient needs to visit a dentist but he is visiting me instead."
-
-print("\n\n_____________________________________________________________________________________________________\n")
-
-
-print(f"\nQuery 1: {valid_concern} \n------------")
-resp_to_patient = gen_response(valid_concern)
-print(f"Response: {resp_to_patient}\n==========================================")
-
-print(f"\nQuery 2: {nurseprob} \n------------")
-resp_to_nurseprob = gen_response(nurseprob)
-print(f"Response: {resp_to_nurseprob}\n==========================================")
-
-print(f"\nQuery 3: Hi! \n------------")
-resp_to_hi = gen_response("Hi!")
-print(f"Response: {resp_to_hi}\n==========================================")
-
-print(f"\nQuery 4: {wrong_doc} \n------------")
-resp_to_wrong_doc = gen_response(wrong_doc)
-print(f"Response: {resp_to_wrong_doc}\n==========================================")

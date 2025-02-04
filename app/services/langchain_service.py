@@ -8,6 +8,8 @@ from langchain_community.document_loaders.youtube import YoutubeLoader
 import json
 from app.utils.progress_tracker import log_progress  #custom logging
 
+from .eo_asst import gen_response
+
 load_dotenv()
 
 
@@ -38,9 +40,9 @@ def generate_langchain_response(prompt_text, template=None):
 
             Rules:
             1. Return ONLY a JSON object in this EXACT format:
-            {{"youtube_url": "URL", "condition": "CONDITION"}}
+            {{"youtube_url": "URL", "query": "QUERY"}}
             2. For YouTube URL: Extract any YouTube URL from the message. If there is no YouTube URL exists, use null
-            3. For condition: Extract any user message or query accompanied with this URL. Any text in {user_message} apart from the URL should be treated as condition. If there is no other text apart from the URL, then use "summarize"
+            3. For query: Extract any user message or query accompanied with this URL. Any text in {user_message} apart from the URL should be treated as QUERY. If there is no other text apart from the URL, then use null.
             4. Do not add any explanations or text before or after the JSON""")
     ])
                              | llm
@@ -108,7 +110,7 @@ def generate_langchain_response(prompt_text, template=None):
                         log_progress("No YouTube URL found in the message.")
                         return "No YouTube URL found in the message."
 
-                    yt_conditions = parsing_result.get("condition",
+                    yt_conditions = parsing_result.get("query",
                                                        "summarize")
 
                     # Step 3: Load YouTube transcript and summarize
@@ -131,7 +133,8 @@ def generate_langchain_response(prompt_text, template=None):
                     return f"Error parsing YouTube information: {str(e)}"
 
             elif "generalquery" in intent:
-                general_response = llm.invoke(user_message)
+                #general_response = llm.invoke(user_message)
+                general_response = gen_response(user_message)
                 response_content = general_response.content if hasattr(
                     general_response, 'content') else str(general_response)
                 log_progress("General query response generated")
