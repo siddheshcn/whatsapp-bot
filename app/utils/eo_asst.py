@@ -3,6 +3,8 @@ from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_core.messages import SystemMessage, AIMessage, HumanMessage
 from langchain_google_firestore import FirestoreChatMessageHistory
 from google.cloud import firestore
+from google.oauth2 import service_account
+import json
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnableLambda
@@ -27,7 +29,13 @@ def load_chat_db():
     COLLECTION_NAME = "chat_history"
 
     print("Init Firestore chat message history....")
-    client = firestore.Client(project=PROJECT_ID)
+    credentials_json = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
+    if credentials_json:
+        credentials_dict = json.loads(credentials_json)
+        credentials = service_account.Credentials.from_service_account_info(credentials_dict)
+        client = firestore.Client(project=PROJECT_ID, credentials=credentials)
+    else:
+        client = firestore.Client(project=PROJECT_ID)
     chat_history = FirestoreChatMessageHistory(
         session_id = SESSION_ID,
         collection=COLLECTION_NAME,
