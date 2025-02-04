@@ -23,7 +23,7 @@ class EOAssistant:
         self.model = self.init_model()
         self.embeddings = self.init_embeddings()
         self.current_dir, self.kb_folder, self.local_kb_path, self.persistent_directory = self.get_paths()
-        self.db = self.initialize_vector_store()
+        self.db = self.initialize_vector_store() #This line was changed from original
         self.chain = self.init_chain()
         log_progress("EOAssistant initialization completed")
 
@@ -75,25 +75,42 @@ class EOAssistant:
             log_progress(f"Processed {len(docs)} documents")
         return all_docs
 
-    def initialize_vector_store(self):
+    @classmethod
+    def initialize_on_deployment(cls):
+        """Initialize vector store during deployment"""
+        log_progress("Initializing vector store...")
+        try:
+            # Initialize basic components
+            embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+            _, kb_folder, _, persistent_directory = cls().get_paths()
+
+            # Initialize vector store
+            cls.initialize_vector_store(persistent_directory, kb_folder, embeddings)
+            log_progress("Vector store initialization completed")
+        except Exception as e:
+            log_progress(f"Failed to initialize vector store: {str(e)}")
+            raise
+
+    @staticmethod
+    def initialize_vector_store(persistent_directory, kb_folder, embeddings):
         """Initialize or load the vector store"""
-        if not os.path.exists(self.persistent_directory):
+        if not os.path.exists(persistent_directory):
             print(
                 "Persistent Directory does not exist. Creating new vector store..."
             )
-            kb_files = self.load_kb_files()
+            kb_files = EOAssistant.load_kb_files(EOAssistant()) #This line was changed from original
             if not kb_files:
                 raise FileNotFoundError(
-                    f"No markdown files found in {self.kb_folder} directory.")
-            all_docs = self.process_documents(kb_files)
+                    f"No markdown files found in {kb_folder} directory.")
+            all_docs = EOAssistant.process_documents(EOAssistant(), kb_files) #This line was changed from original
             db = Chroma.from_documents(
                 all_docs,
-                self.embeddings,
-                persist_directory=self.persistent_directory)
+                embeddings,
+                persist_directory=persistent_directory)
         else:
             print("Vector store already present.")
-            db = Chroma(persist_directory=self.persistent_directory,
-                        embedding_function=self.embeddings)
+            db = Chroma(persist_directory=persistent_directory,
+                        embedding_function=embeddings)
         return db
 
     def get_relevant_chunks(self, query):
