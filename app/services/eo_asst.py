@@ -19,21 +19,28 @@ from app.utils.progress_tracker import log_progress  #custom logging
 class EOAssistant:
 
     def __init__(self):
+        log_progress("Initializing EOAssistant...")
         self.model = self.init_model()
         self.embeddings = self.init_embeddings()
-        self.current_dir, self.kb_folder, self.local_kb_path, self.persistent_directory = self.get_paths(
-        )
+        self.current_dir, self.kb_folder, self.local_kb_path, self.persistent_directory = self.get_paths()
         self.db = self.initialize_vector_store()
         self.chain = self.init_chain()
+        log_progress("EOAssistant initialization completed")
 
     def init_model(self):
         """Initialize the language model"""
+        log_progress("Initializing ChatOpenAI model...")
         load_dotenv()
-        return ChatOpenAI(model="gpt-4o-mini")
+        model = ChatOpenAI(model="gpt-4o-mini")
+        log_progress("ChatOpenAI model initialized successfully")
+        return model
 
     def init_embeddings(self):
         """Initialize the embedding model"""
-        return OpenAIEmbeddings(model="text-embedding-3-small")
+        log_progress("Initializing OpenAI embeddings...")
+        embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+        log_progress("OpenAI embeddings initialized successfully")
+        return embeddings
 
     def get_paths(self):
         """Get all necessary file paths"""
@@ -91,6 +98,7 @@ class EOAssistant:
 
     def get_relevant_chunks(self, query):
         """Retrieve relevant documents based on query"""
+        log_progress(f"Retrieving relevant chunks for query: {query[:50]}...")
         retriever = self.db.as_retriever(
             search_type="similarity_score_threshold",
             search_kwargs={
@@ -99,10 +107,10 @@ class EOAssistant:
             },
         )
         relevant_knowledge = retriever.invoke(query)
-        print("---Relevant Documents---")
+        log_progress(f"Found {len(relevant_knowledge)} relevant documents")
         for i, doc in enumerate(relevant_knowledge, 1):
             if doc.metadata:
-                print(f"Source: {doc.metadata.get('source','Unknown')}")
+                log_progress(f"Document {i} source: {doc.metadata.get('source','Unknown')}")
         return relevant_knowledge
 
     def init_chain(self):
@@ -154,5 +162,8 @@ def get_assistant():
 
 def gen_response(query):
     """Generate response for user query"""
+    log_progress(f"Generating response for query: {query[:50]}...")
     assistant = get_assistant()
-    return assistant.generate_response(query)
+    response = assistant.generate_response(query)
+    log_progress("Response generated successfully")
+    return response
