@@ -133,12 +133,9 @@ def generate_langchain_response(prompt_text, template=None):
                     return f"Error parsing YouTube information: {str(e)}"
 
             elif "generalquery" in intent:
-                #general_response = llm.invoke(user_message)
-                general_response = gen_response(user_message)
-                response_content = general_response.content if hasattr(
-                    general_response, 'content') else str(general_response)
+                response = gen_response(user_message)
                 log_progress("General query response generated")
-                return response_content
+                return str(response)
 
             else:
                 log_progress("No intent detected. Generating error response.")
