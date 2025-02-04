@@ -53,10 +53,10 @@ embeddings = OpenAIEmbeddings(
         model="text-embedding-3-small"
     )
 # Get the current directory and file path
-current_dir = os.path.dirname(os.path.abspath(__file__))
-kb_folder = "data"
-local_kb_path = os.path.join(current_dir, kb_folder, "Chapter_5_Seven_Scenarios.md")
-persistent_directory = os.path.join(current_dir, "db", "chroma_db")
+current_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+kb_folder = os.path.join(current_dir, "data")
+local_kb_path = os.path.join(kb_folder, "Chapter_5_Seven_Scenarios.md")
+persistent_directory = os.path.join(current_dir, "app", "utils", "db", "chroma_db")
 
 # Update the kb loading section
 def load_kb_files():
@@ -64,7 +64,7 @@ def load_kb_files():
     kb_files = []
     for file in os.listdir(kb_folder):
         if file.endswith('.md'):
-            file_path = os.path.join(current_dir, kb_folder, file)
+            file_path = os.path.join(kb_folder, file)
             kb_files.append(file_path)
     return kb_files
 
