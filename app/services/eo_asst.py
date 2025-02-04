@@ -12,12 +12,17 @@ import os
 from langchain_community.document_loaders import TextLoader
 from langchain.text_splitter import CharacterTextSplitter
 from langchain_chroma import Chroma
+from app.utils.progress_tracker import log_progress  #custom logging
+
+
 
 class EOAssistant:
+
     def __init__(self):
         self.model = self.init_model()
         self.embeddings = self.init_embeddings()
-        self.current_dir, self.kb_folder, self.local_kb_path, self.persistent_directory = self.get_paths()
+        self.current_dir, self.kb_folder, self.local_kb_path, self.persistent_directory = self.get_paths(
+        )
         self.db = self.initialize_vector_store()
         self.chain = self.init_chain()
 
@@ -32,10 +37,12 @@ class EOAssistant:
 
     def get_paths(self):
         """Get all necessary file paths"""
-        current_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        current_dir = os.path.dirname(
+            os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
         kb_folder = os.path.join(current_dir, "data")
         local_kb_path = os.path.join(kb_folder, "Chapter_5_Seven_Scenarios.md")
-        persistent_directory = os.path.join(current_dir, "app", "utils", "db", "chroma_db")
+        persistent_directory = os.path.join(current_dir, "app", "utils", "db",
+                                            "chroma_db")
         return current_dir, kb_folder, local_kb_path, persistent_directory
 
     def load_kb_files(self):
@@ -54,30 +61,42 @@ class EOAssistant:
             print(f"\nProcessing file: {file_path}")
             loader = TextLoader(file_path)
             documents = loader.load()
-            text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
+            text_splitter = CharacterTextSplitter(chunk_size=10000,
+                                                  chunk_overlap=100)
             docs = text_splitter.split_documents(documents)
             all_docs.extend(docs)
+            log_progress(f"Processed {len(docs)} documents")
         return all_docs
 
     def initialize_vector_store(self):
         """Initialize or load the vector store"""
         if not os.path.exists(self.persistent_directory):
-            print("Persistent Directory does not exist. Creating new vector store...")
+            print(
+                "Persistent Directory does not exist. Creating new vector store..."
+            )
             kb_files = self.load_kb_files()
             if not kb_files:
-                raise FileNotFoundError(f"No markdown files found in {self.kb_folder} directory.")
+                raise FileNotFoundError(
+                    f"No markdown files found in {self.kb_folder} directory.")
             all_docs = self.process_documents(kb_files)
-            db = Chroma.from_documents(all_docs, self.embeddings, persist_directory=self.persistent_directory)
+            db = Chroma.from_documents(
+                all_docs,
+                self.embeddings,
+                persist_directory=self.persistent_directory)
         else:
             print("Vector store already present.")
-            db = Chroma(persist_directory=self.persistent_directory, embedding_function=self.embeddings)
+            db = Chroma(persist_directory=self.persistent_directory,
+                        embedding_function=self.embeddings)
         return db
 
     def get_relevant_chunks(self, query):
         """Retrieve relevant documents based on query"""
         retriever = self.db.as_retriever(
             search_type="similarity_score_threshold",
-            search_kwargs={"k": 5, "score_threshold": 0.1},
+            search_kwargs={
+                "k": 5,
+                "score_threshold": 0.1
+            },
         )
         relevant_knowledge = retriever.invoke(query)
         print("---Relevant Documents---")
@@ -106,7 +125,9 @@ Handling User Queries:
 
 Your goal is to provide a smooth, engaging, and contextually rich experience, ensuring that the book's wisdom is accessible in a meaningful way.
             """),
-            ("human", "Here's the text from the book: {knowledge}. User query is as follows:{user_problem}."),
+            ("human",
+             "Here's the text from the book: {knowledge}. User query is as follows:{user_problem}."
+             ),
         ]
         eodr_template = ChatPromptTemplate.from_messages(eodr_message)
         return eodr_template | self.model | StrOutputParser()
@@ -119,14 +140,17 @@ Your goal is to provide a smooth, engaging, and contextually rich experience, en
             "knowledge": relevant_knowledge
         })
 
+
 # Create a singleton instance
 _assistant = None
+
 
 def get_assistant():
     global _assistant
     if _assistant is None:
         _assistant = EOAssistant()
     return _assistant
+
 
 def gen_response(query):
     """Generate response for user query"""
