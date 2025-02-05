@@ -1,0 +1,42 @@
+Initializing vector store...
+Removed existing vector store
+Creating new vector store...
+2025-02-05 03:53:20,909 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+Error initializing vector store: attempt to write a readonly database
+Traceback (most recent call last):
+  File "/home/runner/workspace/test_response.py", line 14, in <module>
+    assistant = EOAssistant.initialize_on_deployment()
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/app/services/eo_asst.py", line 116, in initialize_on_deployment
+    instance.db = instance.initialize_vector_store(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/app/services/eo_asst.py", line 187, in initialize_vector_store
+    vector_store = Chroma.from_documents(
+                   ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/langchain_chroma/vectorstores.py", line 1237, in from_documents
+    return cls.from_texts(
+           ^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/langchain_chroma/vectorstores.py", line 1190, in from_texts
+    chroma_collection.add_texts(
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/langchain_chroma/vectorstores.py", line 554, in add_texts
+    self._collection.upsert(
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/chromadb/api/models/Collection.py", line 344, in upsert
+    self._client._upsert(
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/chromadb/telemetry/opentelemetry/__init__.py", line 150, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/chromadb/api/segment.py", line 103, in wrapper
+    return self._rate_limit_enforcer.rate_limit(func)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/chromadb/rate_limit/simple_rate_limit/__init__.py", line 24, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/chromadb/api/segment.py", line 564, in _upsert
+    self._producer.submit_embeddings(collection_id, records_to_submit)
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/chromadb/telemetry/opentelemetry/__init__.py", line 150, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/chromadb/db/mixins/embeddings_queue.py", line 243, in submit_embeddings
+    results = cur.execute(sql, params).fetchall()
+              ^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: attempt to write a readonly database

@@ -182,6 +182,12 @@ class EOAssistant:
             import shutil
             shutil.rmtree(persistent_directory)
             print("Removed existing vector store")
+
+        try:
+            os.makedirs(persistent_directory, exist_ok=True)
+            log_progress(f"Created/verified directory: {persistent_directory}")
+        except Exception as e:
+            log_progress(f"Error creating directory: {str(e)}")
             
         print("Creating new vector store...")
         vector_store = Chroma.from_documents(
