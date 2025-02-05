@@ -122,15 +122,18 @@ class EOAssistant:
             docs = text_splitter.split_documents(documents)
             all_docs.extend(docs)
             
-        # Create vector store regardless of directory existence
-        if os.path.exists(persistent_directory):
-            print("Vector store directory exists, recreating store...")
-        
-        vector_store = Chroma.from_documents(
-            documents=all_docs,
-            embedding=embeddings,
-            persist_directory=persistent_directory
-        )
+        # Check if vector store exists
+        if not os.path.exists(persistent_directory):
+            vector_store = Chroma.from_documents(
+                documents=all_docs,
+                embedding=embeddings,
+                persist_directory=persistent_directory
+            )
+        else:
+            vector_store = Chroma(
+                persist_directory=persistent_directory,
+                embedding_function=embeddings
+            )
         return vector_store
 
     def get_relevant_chunks(self, query):
@@ -154,21 +157,9 @@ class EOAssistant:
         #         "lambda_mult": 0.7
         #     },
         # )
-        print("\nAttempting to retrieve documents...")
         relevant_knowledge = retriever.invoke(query)
-        print(f"\nRaw retrieval result type: {type(relevant_knowledge)}")
-        print(f"Raw retrieval content: {relevant_knowledge}")
-        
         if isinstance(relevant_knowledge, list):
             log_progress(f"Found {len(relevant_knowledge)} relevant documents")
-            print(f"\nFound {len(relevant_knowledge)} relevant documents")
-            print("\nRetrieved content snippets:")
-        else:
-            log_progress("Warning: Retrieved content is not a list")
-            print("\nWarning: Retrieved content is not in expected format")
-        for i, doc in enumerate(relevant_knowledge, 1):
-            print(f"\nDocument {i}:")
-            print(doc.page_content[:200] + "...")
         for i, doc in enumerate(relevant_knowledge, 1):
             if doc.metadata:
                 log_progress(f"Document {i} source: {doc.metadata.get('source','Unknown')}")
