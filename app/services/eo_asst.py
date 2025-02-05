@@ -1,4 +1,3 @@
-
 """
 EOAssistant - Extraordinary Doctor Assistant
 This module implements an AI assistant specialized in medical knowledge from the Extraordinary Doctor book.
@@ -56,13 +55,13 @@ class EOAssistant:
         current_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
         kb_folder = os.path.join(current_dir, "data")
         persistent_directory = os.path.join(current_dir, "db", "chroma_db")
-        
+
         try:
             os.makedirs(persistent_directory, exist_ok=True)
             log_progress(f"Created/verified directory: {persistent_directory}")
         except Exception as e:
             log_progress(f"Error creating directory: {str(e)}")
-        
+
         return current_dir, kb_folder, persistent_directory
 
     def load_kb_files(self):
@@ -92,7 +91,7 @@ class EOAssistant:
             list: Processed document chunks
         """
         all_docs = []
-        CharacterTextSplitter(
+        text_splitter = CharacterTextSplitter(
             chunk_size=1000,
             chunk_overlap=200,
             length_function=len,
@@ -104,7 +103,7 @@ class EOAssistant:
             docs = text_splitter.split_documents(documents)
             all_docs.extend(docs)
             log_progress(f"Processed {len(docs)} chunks from {file_path}")
-            
+
         return all_docs
 
     @classmethod
@@ -140,7 +139,7 @@ class EOAssistant:
         print(f"\n=== Vector Store Initialization ===")
         print(f"Persistent directory: {persistent_directory}")
         print(f"KB folder: {kb_folder}")
-        
+
         # Load and process knowledge base files
         print("\nScanning for markdown files...")
         kb_files = [
@@ -149,11 +148,11 @@ class EOAssistant:
             if f.endswith('.md')
         ]
         print(f"Found {len(kb_files)} markdown files: {kb_files}")
-        
+
         if not kb_files:
             print(f"No markdown files found in {kb_folder}")
             raise FileNotFoundError(f"No markdown files found in {kb_folder}")
-        
+
         # Process documents
         print("\nProcessing documents...")
         all_docs = []
@@ -163,7 +162,7 @@ class EOAssistant:
             length_function=len,
             separator="\n\n"  # Split on paragraph breaks
         )
-        
+
         for file_path in kb_files:
             print(f"\nProcessing file: {file_path}")
             loader = TextLoader(file_path)
@@ -172,9 +171,9 @@ class EOAssistant:
             docs = text_splitter.split_documents(documents)
             print(f"Split into {len(docs)} chunks")
             all_docs.extend(docs)
-        
+
         print(f"\nTotal chunks across all documents: {len(all_docs)}")
-        
+
         # Initialize vector store
         print("\nInitializing vector store...")
         # Remove existing directory to force fresh creation
@@ -188,7 +187,7 @@ class EOAssistant:
             log_progress(f"Created/verified directory: {persistent_directory}")
         except Exception as e:
             log_progress(f"Error creating directory: {str(e)}")
-            
+
         print("Creating new vector store...")
         vector_store = Chroma.from_documents(
             documents=all_docs,
@@ -196,13 +195,13 @@ class EOAssistant:
             persist_directory=persistent_directory
         )
         print("Vector store created and populated with documents")
-        
+
         # Verify vector store contents
         collection = vector_store._collection
         print(f"\nVector store statistics:")
         print(f"Collection name: {collection.name}")
         print(f"Number of documents: {collection.count()}")
-        
+
         print(f"\nVector store initialized successfully in {persistent_directory}")
         return vector_store
 
@@ -215,20 +214,20 @@ class EOAssistant:
             list: Relevant document chunks
         """
         log_progress(f"Retrieving relevant chunks for query: {query[:50]}...")
-        
+
         retriever = self.db.as_retriever(
             search_kwargs={"k": 1000},
             search_type="similarity"
         )
-        
+
         relevant_knowledge = retriever.invoke(query)
-        
+
         if isinstance(relevant_knowledge, list):
             log_progress(f"Found {len(relevant_knowledge)} relevant documents")
             for i, doc in enumerate(relevant_knowledge, 1):
                 if doc.metadata:
                     log_progress(f"Document {i} source: {doc.metadata.get('source','Unknown')}")
-                    
+
         return relevant_knowledge
 
     def init_chain(self):
@@ -251,7 +250,7 @@ Your Role & Behavior:
             ("system", system_prompt),
             ("human", "Here's the text from the book: {knowledge}. User query is as follows:{user_problem}."),
         ]
-        
+
         template = ChatPromptTemplate.from_messages(messages)
         return template | self.model | StrOutputParser()
 
@@ -292,3 +291,23 @@ def gen_response(query):
     response = assistant.generate_response(query)
     log_progress("Response generated successfully")
     return response
+
+def check_chroma_db_validity(db_path):
+    # Check if sqlite file exists
+    if not os.path.exists(os.path.join(db_path, 'chroma.sqlite3')):
+        return False
+
+    # Find the UUID directory (there should be exactly one)
+    subdirs = [d for d in os.listdir(db_path) 
+              if os.path.isdir(os.path.join(db_path, d))]
+    if len(subdirs) != 1:
+        return False
+
+    uuid_dir = subdirs[0]
+    required_files = ['data_level0.bin', 'header.bin', 'length.bin', 'link_lists.bin']
+
+    # Check if all required files exist in the UUID directory
+    return all(
+        os.path.exists(os.path.join(db_path, uuid_dir, f))
+        for f in required_files
+    )
