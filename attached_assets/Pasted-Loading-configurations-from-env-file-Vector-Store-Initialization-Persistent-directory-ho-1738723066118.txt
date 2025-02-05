@@ -1,0 +1,100 @@
+Loading configurations from .env file
+
+=== Vector Store Initialization ===
+Persistent directory: /home/runner/workspace/db/chroma_db
+KB folder: /home/runner/workspace/data
+
+Scanning for markdown files...
+Found 2 markdown files: ['/home/runner/workspace/data/Chapter_5_Seven_Scenarios.md', '/home/runner/workspace/data/Chapter_7_Practical_strategies_to_build_influence.md']
+
+Processing documents...
+
+Processing file: /home/runner/workspace/data/Chapter_5_Seven_Scenarios.md
+Loaded document length: 24009 characters
+Split into 1 chunks
+
+Processing file: /home/runner/workspace/data/Chapter_7_Practical_strategies_to_build_influence.md
+Loaded document length: 25745 characters
+Split into 1 chunks
+
+Total chunks across all documents: 2
+
+Initializing vector store...
+Loading existing vector store...
+2025-02-05 02:36:04,137 - chromadb.telemetry.product.posthog - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+Existing vector store loaded
+
+Vector store statistics:
+Collection name: langchain
+Number of documents: 0
+
+Vector store initialized successfully in /home/runner/workspace/db/chroma_db
+
+=== Vector Store Initialization ===
+Persistent directory: /home/runner/workspace/db/chroma_db
+KB folder: /home/runner/workspace/data
+
+Scanning for markdown files...
+Found 2 markdown files: ['/home/runner/workspace/data/Chapter_5_Seven_Scenarios.md', '/home/runner/workspace/data/Chapter_7_Practical_strategies_to_build_influence.md']
+
+Processing documents...
+
+Processing file: /home/runner/workspace/data/Chapter_5_Seven_Scenarios.md
+Loaded document length: 24009 characters
+Split into 1 chunks
+
+Processing file: /home/runner/workspace/data/Chapter_7_Practical_strategies_to_build_influence.md
+Loaded document length: 25745 characters
+Split into 1 chunks
+
+Total chunks across all documents: 2
+
+Initializing vector store...
+Loading existing vector store...
+Existing vector store loaded
+
+Vector store statistics:
+Collection name: langchain
+Number of documents: 0
+
+Vector store initialized successfully in /home/runner/workspace/db/chroma_db
+Vector store initialized successfully in /home/runner/workspace/db/chroma_db
+API Key present: True
+2025-02-05 02:36:06,330 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+
+=== Vector Store Initialization ===
+Persistent directory: /home/runner/workspace/db/chroma_db
+KB folder: /home/runner/workspace/data
+
+Scanning for markdown files...
+Found 2 markdown files: ['/home/runner/workspace/data/Chapter_5_Seven_Scenarios.md', '/home/runner/workspace/data/Chapter_7_Practical_strategies_to_build_influence.md']
+
+Processing documents...
+
+Processing file: /home/runner/workspace/data/Chapter_5_Seven_Scenarios.md
+Loaded document length: 24009 characters
+Split into 1 chunks
+
+Processing file: /home/runner/workspace/data/Chapter_7_Practical_strategies_to_build_influence.md
+Loaded document length: 25745 characters
+Split into 1 chunks
+
+Total chunks across all documents: 2
+
+Initializing vector store...
+Loading existing vector store...
+Existing vector store loaded
+
+Vector store statistics:
+Collection name: langchain
+Number of documents: 0
+
+Vector store initialized successfully in /home/runner/workspace/db/chroma_db
+2025-02-05 02:36:07,954 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-02-05 02:36:11,558 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+
+Response: It's understandable to feel frustrated when patients come in with information they've found online. In Chapter 5, there’s a discussion about the importance of effective communication between doctors and patients. One of the key takeaways is how crucial it is to educate patients while addressing their concerns. 
+
+Remember, patients often try to take an active role in their health, which can lead to them seeking information online. It might help to acknowledge their findings and then guide the conversation towards a more informed understanding of their symptoms. This fosters a collaborative atmosphere where you can provide your expertise alongside their research, ultimately improving their comprehension and trust in your care. 
+
+Additionally, addressing this topic can also open up opportunities to discuss reliable sources of information, which can empower your patients in a more productive way.
