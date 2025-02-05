@@ -134,6 +134,10 @@ class EOAssistant:
         )
         relevant_knowledge = retriever.invoke(query)
         log_progress(f"Found {len(relevant_knowledge)} relevant documents")
+        print("\nRetrieved content snippets:")
+        for i, doc in enumerate(relevant_knowledge, 1):
+            print(f"\nDocument {i}:")
+            print(doc.page_content[:200] + "...")
         for i, doc in enumerate(relevant_knowledge, 1):
             if doc.metadata:
                 log_progress(f"Document {i} source: {doc.metadata.get('source','Unknown')}")
