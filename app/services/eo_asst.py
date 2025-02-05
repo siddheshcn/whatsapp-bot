@@ -92,8 +92,12 @@ class EOAssistant:
             list: Processed document chunks
         """
         all_docs = []
-        text_splitter = CharacterTextSplitter(chunk_size=10000, chunk_overlap=100)
-        
+        CharacterTextSplitter(
+            chunk_size=1000,
+            chunk_overlap=200,
+            length_function=len,
+            separator="\n\n"  # Split on paragraph breaks
+        )
         for file_path in kb_files:
             loader = TextLoader(file_path)
             documents = loader.load()
@@ -112,8 +116,10 @@ class EOAssistant:
             _, kb_folder, persistent_directory = cls().get_paths()
             cls.initialize_vector_store(persistent_directory, kb_folder, embeddings)
             log_progress("Vector store initialization completed")
+            print(f"Vector store initialized successfully(iod) in {persistent_directory}")
         except Exception as e:
-            log_progress(f"Failed to initialize vector store: {str(e)}")
+            print(f"Error initializing vector store: {str(e)}")
+            log_progress(f"Failed to initialize vector store(iod): {str(e)}")
             raise
 
     @staticmethod
@@ -137,11 +143,17 @@ class EOAssistant:
         ]
         
         if not kb_files:
+            print(f"No markdown files found in {kb_folder}")
             raise FileNotFoundError(f"No markdown files found in {kb_folder}")
         
         # Process documents
         all_docs = []
-        text_splitter = CharacterTextSplitter(chunk_size=5000, chunk_overlap=0)
+        text_splitter = CharacterTextSplitter(
+            chunk_size=30000,
+            chunk_overlap=200,
+            length_function=len,
+            separator="\n\n"  # Split on paragraph breaks
+        )
         
         for file_path in kb_files:
             loader = TextLoader(file_path)
@@ -161,6 +173,7 @@ class EOAssistant:
                 persist_directory=persistent_directory,
                 embedding_function=embeddings
             )
+        print(f"Vector store initialized successfully (ivs) in {persistent_directory}")
         return vector_store
 
     def get_relevant_chunks(self, query):
