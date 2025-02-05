@@ -141,12 +141,7 @@ class EOAssistant:
         
         # Process documents
         all_docs = []
-        text_splitter = CharacterTextSplitter(
-            chunk_size=1000,
-            chunk_overlap=200,
-            length_function=len,
-            separator="\n\n"  # Split on paragraph breaks
-        )
+        text_splitter = CharacterTextSplitter(chunk_size=5000, chunk_overlap=0)
         
         for file_path in kb_files:
             loader = TextLoader(file_path)
