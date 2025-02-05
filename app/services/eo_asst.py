@@ -124,14 +124,23 @@ class EOAssistant:
     def get_relevant_chunks(self, query):
         """Retrieve relevant documents based on query"""
         log_progress(f"Retrieving relevant chunks for query: {query[:50]}...")
+        
+        # Fetch all documents
         retriever = self.db.as_retriever(
-            search_type="mmr",  # Changed to MMR for better diversity
             search_kwargs={
-                "k": 3,
-                "fetch_k": 10,
-                "lambda_mult": 0.7  # Balance between relevance and diversity
+                "k": 100  # Set high number to fetch all chunks
             },
         )
+        
+        # Previous MMR implementation for reference:
+        # retriever = self.db.as_retriever(
+        #     search_type="mmr",
+        #     search_kwargs={
+        #         "k": 3,
+        #         "fetch_k": 10,
+        #         "lambda_mult": 0.7
+        #     },
+        # )
         relevant_knowledge = retriever.invoke(query)
         log_progress(f"Found {len(relevant_knowledge)} relevant documents")
         print("\nRetrieved content snippets:")
