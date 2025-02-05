@@ -1,0 +1,32 @@
+python test_response.py
+Loading configurations from .env file
+Loading configurations from .env file
+Vector store already present.
+2025-02-05 00:34:06,102 - chromadb.telemetry.product.posthog - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+API Key present: True
+2025-02-05 00:34:08,585 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+Vector store already present.
+2025-02-05 00:34:09,823 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-02-05 00:34:13,106 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+Response: It sounds like you're facing some challenges with your nursing team. In Chapter 5, the author emphasizes the importance of effective communication and respect within the healthcare team. Building a cohesive environment where everyone feels valued can significantly improve punctuality and collaboration. 
+
+One approach discussed is setting clear expectations and having open dialogues with your staff. By communicating the importance of timeliness and encouraging nurses to share their concerns or obstacles, you may foster a more accountable environment. 
+
+Additionally, in Chapter 7, the author highlights the impact of team-building activities that encourage camaraderie and team spirit, which can help improve communication. Engaging your nurses in discussions about their needs and stresses could lead to better understanding and improved behavior.
+
+If you can create a culture of respect and open communication, it often leads to enhanced performance and teamwork. Would you like to explore specific strategies mentioned in these chapters?
+~/workspace$ python test_response.py
+Loading configurations from .env file
+Loading configurations from .env file
+Vector store already present.
+2025-02-05 00:34:48,047 - chromadb.telemetry.product.posthog - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+API Key present: True
+2025-02-05 00:34:49,462 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+Vector store already present.
+2025-02-05 00:34:50,553 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-02-05 00:34:54,442 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+Response: It sounds like you're grappling with a common challenge faced by many healthcare professionals today. In Chapter 5, titled "Navigating Patient Information," the author discusses the impact of the internet on patient perceptions and the importance of guiding them through the information they find. This chapter emphasizes that while it can indeed be frustrating when patients rely on Google, it can also be an opportunity to engage them in meaningful conversations about their health.
+
+One key point made is the value of validating patients' concerns while gently correcting misconceptions. Building rapport and trust can help in this situation. The author suggests using phrases like, "I understand that you've read about this online; let's discuss what I found based on your symptoms," which allows you to honor the patient's research while steering them toward professional insights.
+
+If you find this issue recurring, revisiting that chapter might provide further strategies on how to handle these discussions effectively, ultimately making the patient feel more involved and respected in their healthcare journey.
