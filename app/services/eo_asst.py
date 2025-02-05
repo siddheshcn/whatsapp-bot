@@ -131,7 +131,6 @@ class EOAssistant:
             embedding=embeddings,
             persist_directory=persistent_directory
         )
-        vector_store.persist()
         return vector_store
 
     def get_relevant_chunks(self, query):
