@@ -302,21 +302,34 @@ def gen_response(query):
     return response
 
 def check_chroma_db_validity(db_path):
+    print(f"\nChecking ChromaDB validity in: {db_path}")
+    
     # Check if sqlite file exists
-    if not os.path.exists(os.path.join(db_path, 'chroma.sqlite3')):
+    sqlite_path = os.path.join(db_path, 'chroma.sqlite3')
+    if not os.path.exists(sqlite_path):
+        print(f"SQLite file not found at: {sqlite_path}")
         return False
 
     # Find the UUID directory (there should be exactly one)
     subdirs = [d for d in os.listdir(db_path) 
               if os.path.isdir(os.path.join(db_path, d))]
+    print(f"Found directories: {subdirs}")
+    
     if len(subdirs) != 1:
+        print(f"Expected exactly one UUID directory, found {len(subdirs)}")
         return False
 
     uuid_dir = subdirs[0]
     required_files = ['data_level0.bin', 'header.bin', 'length.bin', 'link_lists.bin']
-
-    # Check if all required files exist in the UUID directory
-    return all(
-        os.path.exists(os.path.join(db_path, uuid_dir, f))
-        for f in required_files
-    )
+    print(f"Checking required files in UUID directory: {uuid_dir}")
+    
+    # Check each required file
+    for f in required_files:
+        file_path = os.path.join(db_path, uuid_dir, f)
+        exists = os.path.exists(file_path)
+        print(f"- {f}: {'Found' if exists else 'Missing'}")
+        if not exists:
+            return False
+            
+    print("All ChromaDB files verified successfully")
+    return True
