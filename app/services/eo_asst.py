@@ -18,7 +18,7 @@ import os
 
 class EOAssistant:
     """
-    A specialized medical knowledge assistant that processes queries using
+    A specialized knowledge assistant that processes queries using
     content from the Extraordinary Doctor book chapters.
     """
 
