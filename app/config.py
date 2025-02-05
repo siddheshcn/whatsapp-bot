@@ -35,8 +35,24 @@ def load_configurations(app):
         raise ValueError(f"Missing required configurations: {', '.join(missing_configs)}")
 
 def configure_logging():
+    # Create logs directory if it doesn't exist
+    if not os.path.exists('logs'):
+        os.makedirs('logs')
+        
+    # Configure logging to write to both file and console
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-        stream=sys.stdout,
+        handlers=[
+            logging.StreamHandler(sys.stdout),
+            logging.FileHandler('logs/app.log')
+        ]
     )
+    
+    # Set Gunicorn logger level
+    gunicorn_logger = logging.getLogger('gunicorn.error')
+    gunicorn_logger.setLevel(logging.INFO)
+    
+    # Set Werkzeug logger level
+    werkzeug_logger = logging.getLogger('werkzeug')
+    werkzeug_logger.setLevel(logging.INFO)
