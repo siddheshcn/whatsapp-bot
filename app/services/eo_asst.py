@@ -175,23 +175,21 @@ class EOAssistant:
         
         print(f"\nTotal chunks across all documents: {len(all_docs)}")
         
-        # Initialize or load vector store
+        # Initialize vector store
         print("\nInitializing vector store...")
-        if not os.path.exists(persistent_directory):
-            print("Creating new vector store...")
-            vector_store = Chroma.from_documents(
-                documents=all_docs,
-                embedding=embeddings,
-                persist_directory=persistent_directory
-            )
-            print("Vector store created and populated with documents")
-        else:
-            print("Loading existing vector store...")
-            vector_store = Chroma(
-                persist_directory=persistent_directory,
-                embedding_function=embeddings
-            )
-            print("Existing vector store loaded")
+        # Remove existing directory to force fresh creation
+        if os.path.exists(persistent_directory):
+            import shutil
+            shutil.rmtree(persistent_directory)
+            print("Removed existing vector store")
+            
+        print("Creating new vector store...")
+        vector_store = Chroma.from_documents(
+            documents=all_docs,
+            embedding=embeddings,
+            persist_directory=persistent_directory
+        )
+        print("Vector store created and populated with documents")
         
         # Verify vector store contents
         collection = vector_store._collection
