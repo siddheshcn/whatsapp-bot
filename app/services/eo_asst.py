@@ -118,7 +118,7 @@ class EOAssistant:
         for file_path in kb_files:
             loader = TextLoader(file_path)
             documents = loader.load()
-            text_splitter = CharacterTextSplitter(chunk_size=10000, chunk_overlap=100)
+            text_splitter = CharacterTextSplitter(chunk_size=5000, chunk_overlap=0)
             docs = text_splitter.split_documents(documents)
             all_docs.extend(docs)
             
