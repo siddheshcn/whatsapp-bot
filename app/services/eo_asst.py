@@ -22,7 +22,7 @@ class EOAssistant:
         log_progress("Initializing EOAssistant...")
         self.model = self.init_model()
         self.embeddings = self.init_embeddings()
-        self.current_dir, self.kb_folder, self.local_kb_path, self.persistent_directory = self.get_paths()
+        self.current_dir, self.kb_folder, self.persistent_directory = self.get_paths()
         self.db = self.initialize_vector_store() #This line was changed from original
         self.chain = self.init_chain()
         log_progress("EOAssistant initialization completed")
@@ -47,18 +47,21 @@ class EOAssistant:
         current_dir = os.path.dirname(
             os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
         kb_folder = os.path.join(current_dir, "data")
-        local_kb_path = os.path.join(kb_folder, "Chapter_5_Seven_Scenarios.md")
-        persistent_directory = os.path.join(current_dir, "app", "utils", "db",
-                                            "chroma_db")
-        return current_dir, kb_folder, local_kb_path, persistent_directory
+        persistent_directory = os.path.join(current_dir, "db", "chroma_db")
+        os.makedirs(persistent_directory, exist_ok=True)
+        return current_dir, kb_folder, persistent_directory
 
     def load_kb_files(self):
         """Load knowledge base files"""
         kb_files = []
-        for file in os.listdir(self.kb_folder):
-            if file.endswith('.md'):
-                file_path = os.path.join(self.kb_folder, file)
-                kb_files.append(file_path)
+        if os.path.exists(self.kb_folder):
+            for file in os.listdir(self.kb_folder):
+                if file.endswith('.md'):
+                    file_path = os.path.join(self.kb_folder, file)
+                    kb_files.append(file_path)
+            log_progress(f"Found {len(kb_files)} markdown files in knowledge base")
+        else:
+            log_progress("Knowledge base folder not found")
         return kb_files
 
     def process_documents(self, kb_files):
@@ -82,7 +85,7 @@ class EOAssistant:
         try:
             # Initialize basic components
             embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
-            _, kb_folder, _, persistent_directory = cls().get_paths()
+            _, kb_folder, persistent_directory = cls().get_paths()
 
             # Initialize vector store
             cls.initialize_vector_store(persistent_directory, kb_folder, embeddings)
