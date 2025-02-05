@@ -128,7 +128,7 @@ class EOAssistant:
         
         vector_store = Chroma.from_documents(
             documents=all_docs,
-            embedding_function=embeddings,
+            embedding=embeddings,
             persist_directory=persistent_directory
         )
         vector_store.persist()
