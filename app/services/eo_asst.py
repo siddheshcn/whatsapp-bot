@@ -122,19 +122,17 @@ class EOAssistant:
             docs = text_splitter.split_documents(documents)
             all_docs.extend(docs)
             
-        # Check if vector store exists
-        if not os.path.exists(persistent_directory):
-            # Create and return vector store
-            return Chroma.from_documents(
-                all_docs,
-                embeddings,
-                persist_directory=persistent_directory
-            )
-        else:
-            print("Vector store already present.")
-            db = Chroma(persist_directory=persistent_directory,
-                        embedding_function=embeddings)
-            return db
+        # Create vector store regardless of directory existence
+        if os.path.exists(persistent_directory):
+            print("Vector store directory exists, recreating store...")
+        
+        vector_store = Chroma.from_documents(
+            documents=all_docs,
+            embedding_function=embeddings,
+            persist_directory=persistent_directory
+        )
+        vector_store.persist()
+        return vector_store
 
     def get_relevant_chunks(self, query):
         """Retrieve relevant documents based on query"""
