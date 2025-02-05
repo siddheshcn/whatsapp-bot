@@ -128,8 +128,9 @@ class EOAssistant:
         # Fetch all documents
         retriever = self.db.as_retriever(
             search_kwargs={
-                "k": 100  # Set high number to fetch all chunks
+                "k": 1000  # Increased k value to ensure we fetch everything
             },
+            search_type="similarity"  # Explicitly set search type
         )
         
         # Previous MMR implementation for reference:
@@ -141,10 +142,18 @@ class EOAssistant:
         #         "lambda_mult": 0.7
         #     },
         # )
+        print("\nAttempting to retrieve documents...")
         relevant_knowledge = retriever.invoke(query)
-        log_progress(f"Found {len(relevant_knowledge)} relevant documents")
-        print(f"Found {len(relevant_knowledge)} relevant documents")
-        print("\nRetrieved content snippets:")
+        print(f"\nRaw retrieval result type: {type(relevant_knowledge)}")
+        print(f"Raw retrieval content: {relevant_knowledge}")
+        
+        if isinstance(relevant_knowledge, list):
+            log_progress(f"Found {len(relevant_knowledge)} relevant documents")
+            print(f"\nFound {len(relevant_knowledge)} relevant documents")
+            print("\nRetrieved content snippets:")
+        else:
+            log_progress("Warning: Retrieved content is not a list")
+            print("\nWarning: Retrieved content is not in expected format")
         for i, doc in enumerate(relevant_knowledge, 1):
             print(f"\nDocument {i}:")
             print(doc.page_content[:200] + "...")
