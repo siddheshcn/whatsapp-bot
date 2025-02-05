@@ -137,20 +137,25 @@ class EOAssistant:
         Returns:
             Chroma: Vector store instance
         """
-        log_progress(f"Checking vector store in: {persistent_directory}")
+        print(f"\n=== Vector Store Initialization ===")
+        print(f"Persistent directory: {persistent_directory}")
+        print(f"KB folder: {kb_folder}")
         
         # Load and process knowledge base files
+        print("\nScanning for markdown files...")
         kb_files = [
             os.path.join(kb_folder, f)
             for f in os.listdir(kb_folder)
             if f.endswith('.md')
         ]
+        print(f"Found {len(kb_files)} markdown files: {kb_files}")
         
         if not kb_files:
             print(f"No markdown files found in {kb_folder}")
             raise FileNotFoundError(f"No markdown files found in {kb_folder}")
         
         # Process documents
+        print("\nProcessing documents...")
         all_docs = []
         text_splitter = CharacterTextSplitter(
             chunk_size=30000,
@@ -160,24 +165,41 @@ class EOAssistant:
         )
         
         for file_path in kb_files:
+            print(f"\nProcessing file: {file_path}")
             loader = TextLoader(file_path)
             documents = loader.load()
+            print(f"Loaded document length: {len(documents[0].page_content)} characters")
             docs = text_splitter.split_documents(documents)
+            print(f"Split into {len(docs)} chunks")
             all_docs.extend(docs)
         
+        print(f"\nTotal chunks across all documents: {len(all_docs)}")
+        
         # Initialize or load vector store
+        print("\nInitializing vector store...")
         if not os.path.exists(persistent_directory):
+            print("Creating new vector store...")
             vector_store = Chroma.from_documents(
                 documents=all_docs,
                 embedding=embeddings,
                 persist_directory=persistent_directory
             )
+            print("Vector store created and populated with documents")
         else:
+            print("Loading existing vector store...")
             vector_store = Chroma(
                 persist_directory=persistent_directory,
                 embedding_function=embeddings
             )
-        print(f"Vector store initialized successfully (ivs) in {persistent_directory}")
+            print("Existing vector store loaded")
+        
+        # Verify vector store contents
+        collection = vector_store._collection
+        print(f"\nVector store statistics:")
+        print(f"Collection name: {collection.name}")
+        print(f"Number of documents: {collection.count()}")
+        
+        print(f"\nVector store initialized successfully in {persistent_directory}")
         return vector_store
 
     def get_relevant_chunks(self, query):
