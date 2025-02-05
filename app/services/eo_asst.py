@@ -102,7 +102,8 @@ class EOAssistant:
     def initialize_vector_store(cls, persistent_directory, kb_folder, embeddings):
         """Initialize or load the vector store"""
         log_progress(f"Checking vector store in: {persistent_directory}")
-        if not os.path.exists(persistent_directory):
+        # Force reinitialization
+        if True:
             log_progress(f"Creating new vector store in: {persistent_directory}")
             instance = cls()
             instance.kb_folder = kb_folder
