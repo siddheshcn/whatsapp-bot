@@ -98,24 +98,36 @@ class EOAssistant:
             log_progress(f"Failed to initialize vector store: {str(e)}")
             raise
 
-    @classmethod
-    def initialize_vector_store(cls, persistent_directory, kb_folder, embeddings):
+    @staticmethod
+    def initialize_vector_store(persistent_directory, kb_folder, embeddings):
         """Initialize or load the vector store"""
         log_progress(f"Checking vector store in: {persistent_directory}")
-        # Force reinitialization
-        if True:
-            log_progress(f"Creating new vector store in: {persistent_directory}")
-            instance = cls()
-            instance.kb_folder = kb_folder
-            kb_files = instance.load_kb_files()
-            if not kb_files:
-                raise FileNotFoundError(
-                    f"No markdown files found in {kb_folder} directory.")
-            all_docs = EOAssistant.process_documents(EOAssistant(), kb_files) #This line was changed from original
-            db = Chroma.from_documents(
-                all_docs,
-                embeddings,
-                persist_directory=persistent_directory)
+        
+        # Load knowledge base files
+        kb_files = []
+        if os.path.exists(kb_folder):
+            for file in os.listdir(kb_folder):
+                if file.endswith('.md'):
+                    kb_files.append(os.path.join(kb_folder, file))
+        
+        if not kb_files:
+            raise FileNotFoundError(f"No markdown files found in {kb_folder} directory.")
+            
+        # Process documents
+        all_docs = []
+        for file_path in kb_files:
+            loader = TextLoader(file_path)
+            documents = loader.load()
+            text_splitter = CharacterTextSplitter(chunk_size=10000, chunk_overlap=100)
+            docs = text_splitter.split_documents(documents)
+            all_docs.extend(docs)
+            
+        # Create and return vector store
+        return Chroma.from_documents(
+            all_docs,
+            embeddings,
+            persist_directory=persistent_directory
+        )
         else:
             print("Vector store already present.")
             db = Chroma(persist_directory=persistent_directory,
