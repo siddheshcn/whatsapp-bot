@@ -6,7 +6,7 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
-print("Loading configurations from .env file")
+print("Loading configurations from .env file...")
 
 # Create Flask app context
 app = create_app()
