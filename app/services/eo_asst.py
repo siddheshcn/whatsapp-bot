@@ -23,7 +23,7 @@ class EOAssistant:
         self.model = self.init_model()
         self.embeddings = self.init_embeddings()
         self.current_dir, self.kb_folder, self.persistent_directory = self.get_paths()
-        self.db = self.initialize_vector_store() #This line was changed from original
+        self.db = self.initialize_vector_store(self.persistent_directory, self.kb_folder, self.embeddings)
         self.chain = self.init_chain()
         log_progress("EOAssistant initialization completed")
 
