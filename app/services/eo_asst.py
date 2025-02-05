@@ -48,7 +48,11 @@ class EOAssistant:
             os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
         kb_folder = os.path.join(current_dir, "data")
         persistent_directory = os.path.join(current_dir, "db", "chroma_db")
-        os.makedirs(persistent_directory, exist_ok=True)
+        try:
+            os.makedirs(persistent_directory, exist_ok=True)
+            log_progress(f"Created/verified directory: {persistent_directory}")
+        except Exception as e:
+            log_progress(f"Error creating directory: {str(e)}")
         return current_dir, kb_folder, persistent_directory
 
     def load_kb_files(self):
@@ -97,10 +101,9 @@ class EOAssistant:
     @staticmethod
     def initialize_vector_store(persistent_directory, kb_folder, embeddings):
         """Initialize or load the vector store"""
+        log_progress(f"Checking vector store in: {persistent_directory}")
         if not os.path.exists(persistent_directory):
-            print(
-                "Persistent Directory does not exist. Creating new vector store..."
-            )
+            log_progress(f"Creating new vector store in: {persistent_directory}")
             kb_files = EOAssistant.load_kb_files(EOAssistant()) #This line was changed from original
             if not kb_files:
                 raise FileNotFoundError(
