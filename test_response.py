@@ -1,7 +1,7 @@
 
 from app import create_app
 from app.services.openai_service import generate_response
-from app.services.eo_asst import EOAssistant
+from app.services.eo_asst import get_assistant
 import os
 from dotenv import load_dotenv
 
@@ -10,8 +10,8 @@ load_dotenv()
 # Create Flask app context
 app = create_app()
 with app.app_context():
-    # Initialize EOAssistant using deployment method
-    assistant = EOAssistant.initialize_on_deployment()
+    # Get existing assistant instance
+    assistant = get_assistant()
     
     # Test the generate_response function
     response = generate_response(
