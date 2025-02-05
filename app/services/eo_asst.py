@@ -98,13 +98,15 @@ class EOAssistant:
             log_progress(f"Failed to initialize vector store: {str(e)}")
             raise
 
-    @staticmethod
-    def initialize_vector_store(persistent_directory, kb_folder, embeddings):
+    @classmethod
+    def initialize_vector_store(cls, persistent_directory, kb_folder, embeddings):
         """Initialize or load the vector store"""
         log_progress(f"Checking vector store in: {persistent_directory}")
         if not os.path.exists(persistent_directory):
             log_progress(f"Creating new vector store in: {persistent_directory}")
-            kb_files = EOAssistant.load_kb_files(EOAssistant()) #This line was changed from original
+            instance = cls()
+            instance.kb_folder = kb_folder
+            kb_files = instance.load_kb_files()
             if not kb_files:
                 raise FileNotFoundError(
                     f"No markdown files found in {kb_folder} directory.")
@@ -123,10 +125,11 @@ class EOAssistant:
         """Retrieve relevant documents based on query"""
         log_progress(f"Retrieving relevant chunks for query: {query[:50]}...")
         retriever = self.db.as_retriever(
-            search_type="similarity_score_threshold",
+            search_type="mmr",  # Changed to MMR for better diversity
             search_kwargs={
-                "k": 5,
-                "score_threshold": 0.1
+                "k": 3,
+                "fetch_k": 10,
+                "lambda_mult": 0.7  # Balance between relevance and diversity
             },
         )
         relevant_knowledge = retriever.invoke(query)
