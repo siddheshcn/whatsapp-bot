@@ -143,6 +143,7 @@ class EOAssistant:
         # )
         relevant_knowledge = retriever.invoke(query)
         log_progress(f"Found {len(relevant_knowledge)} relevant documents")
+        print(f"Found {len(relevant_knowledge)} relevant documents")
         print("\nRetrieved content snippets:")
         for i, doc in enumerate(relevant_knowledge, 1):
             print(f"\nDocument {i}:")
