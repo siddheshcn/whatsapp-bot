@@ -109,14 +109,24 @@ class EOAssistant:
     @classmethod
     def initialize_on_deployment(cls):
         """Initialize vector store during deployment."""
-        log_progress("Initializing vector store...")
+        log_progress("Checking vector store...")
         try:
             instance = cls()  # Create an instance first
-            instance.db = instance.initialize_vector_store(
-                instance.persistent_directory,
-                instance.kb_folder,
-                instance.embeddings
-            )
+            
+            if check_chroma_db_validity(instance.persistent_directory):
+                log_progress("Found valid existing vector store")
+                instance.db = Chroma(
+                    persist_directory=instance.persistent_directory,
+                    embedding_function=instance.embeddings
+                )
+            else:
+                log_progress("No valid vector store found, initializing new one...")
+                instance.db = instance.initialize_vector_store(
+                    instance.persistent_directory,
+                    instance.kb_folder,
+                    instance.embeddings
+                )
+                
             log_progress("Vector store initialization completed")
             print(f"Vector store initialized successfully in {instance.persistent_directory}")
             return instance
