@@ -10,8 +10,8 @@ load_dotenv()
 # Create Flask app context
 app = create_app()
 with app.app_context():
-    # Initialize EOAssistant first
-    assistant = EOAssistant()
+    # Initialize EOAssistant using deployment method
+    assistant = EOAssistant.initialize_on_deployment()
     
     # Test the generate_response function
     response = generate_response(

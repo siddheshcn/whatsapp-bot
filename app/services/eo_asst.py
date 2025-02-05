@@ -110,16 +110,20 @@ class EOAssistant:
     @classmethod
     def initialize_on_deployment(cls):
         """Initialize vector store during deployment."""
-        log_progress("Initializing vector store for deployment...")
+        log_progress("Initializing vector store...")
         try:
-            embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
-            _, kb_folder, persistent_directory = cls().get_paths()
-            cls.initialize_vector_store(persistent_directory, kb_folder, embeddings)
+            instance = cls()  # Create an instance first
+            instance.db = instance.initialize_vector_store(
+                instance.persistent_directory,
+                instance.kb_folder,
+                instance.embeddings
+            )
             log_progress("Vector store initialization completed")
-            print(f"Vector store initialized successfully(iod) in {persistent_directory}")
+            print(f"Vector store initialized successfully in {instance.persistent_directory}")
+            return instance
         except Exception as e:
             print(f"Error initializing vector store: {str(e)}")
-            log_progress(f"Failed to initialize vector store(iod): {str(e)}")
+            log_progress(f"Failed to initialize vector store: {str(e)}")
             raise
 
     @staticmethod
