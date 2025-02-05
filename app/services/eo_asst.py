@@ -135,8 +135,7 @@ class EOAssistant:
             log_progress(f"Failed to initialize vector store: {str(e)}")
             raise
 
-    @staticmethod
-    def initialize_vector_store(persistent_directory, kb_folder, embeddings):
+    def initialize_vector_store(self, persistent_directory, kb_folder, embeddings):
         """
         Initialize or load the vector store for document retrieval.
         Args:
